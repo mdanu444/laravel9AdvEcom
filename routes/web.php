@@ -42,10 +42,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::put('/profile/password', [AdminController::class, 'changepse'])->name('profile.updatepsw');
 
-        Route::get('/profile/update', function () {
-            Session::put('pageTitle', 'Profile');
-            return view('admin.profile-update');
-        })->name('profile.update');
+        Route::get('/profile/update', [AdminController::class, 'profileview'])->name('profile.update');
+        Route::put('/profile/update', [AdminController::class, 'profileupdater'])->name('profile.updater');
     });
     Route::middleware(['guest:admin', 'PreventBackHistory'])->group(function(){
         Route::view('/login', 'admin.login')->name('login');

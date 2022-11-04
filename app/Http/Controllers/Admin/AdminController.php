@@ -7,8 +7,8 @@ use App\Models\Admin\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rules\File;
 
 class AdminController extends Controller
 {
@@ -56,13 +56,54 @@ class AdminController extends Controller
             'newp.max'      => "The New password feild is required and should be correct",
             'confirmp.required' => "The Confirm password  should be same as new",
         ]);
-        $admin = Admin::find(Auth::id());
+        $admin = Admin::find(Auth::guard('admin')->id());
        if (Hash::check($request->oldp, $admin->password)) {
         $admin->password = Hash::make($request->newp);
         $admin->save();
         return redirect()->back()->with('message', 'Password updated Successfully');
     }
     return redirect()->back()->with('message', 'Old password pid not matched.');
+
+    }
+
+
+    function profileview(){
+        Session::put('pageTitle', "Profile");
+        return view('admin.profile-update');
+    }
+
+    function profileupdater(Request $request){
+        $admin = Admin::find(Auth::guard('admin')->id());
+        if ($request->hasFile('photo')) {
+            // return $request->file('photo');
+            $request->validate([
+                'name' => 'required',
+                'phone' => 'required|min:11|max:11',
+                'photo' => 'required|mimes:jpg,jpeg,png',
+            ]);
+            if(Storage::delete(($admin->photo))){
+                $photoName = time().'.'.$request->file('photo')->getClientOriginalExtension();
+                $photo = $request->file('photo')->storeAs('adminPhoto', $photoName);
+                $admin->name = $request->name;
+                $admin->photo = $photo;
+                $admin->phone = $request->phone;
+                $admin->email = $request->email;
+                $admin->save();
+            }
+            return redirect()->back()->with('message', 'Profile Updated Successfully.');
+        }
+        else{
+            $request->validate([
+                'name' => 'required',
+                'phone' => 'required|min:11|max:11',
+            ]);
+            $admin->name = $request->name;
+            $admin->phone = $request->phone;
+            $admin->email = $request->email;
+            $admin->save();
+            return redirect()->back()->with('message', 'Profile Updated Successfully.');
+        }
+        return redirect()->back()->with('message', 'Profile can not update');
 
     }
 }
