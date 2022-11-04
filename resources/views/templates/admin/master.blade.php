@@ -1,12 +1,12 @@
-<x-header/>
+<x-admin.header/>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 {{--  @include('templates/preloader')  --}}
-<x-preloader />
+<x-admin.preloader />
 {{--  @include('templates/navbar')  --}}
-<x-navbar />
+<x-admin.navbar />
 {{--  @include('templates/sidebar')  --}}
-<x-sidebar />
+<x-admin.sidebar />
 
 
 <!-- Content Wrapper. Contains page content -->
@@ -47,7 +47,7 @@
 
 
 {{--  @include('templates/footer')  --}}
-<x-footer />
+<x-admin.footer />
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -56,7 +56,7 @@
 </div>
 <!-- ./wrapper -->
 
-<x-scripts/>
-{{--  <x-scripts />  --}}
+<x-admin.scripts/>
+{{--  <x-admin.scripts />  --}}
 </body>
 </html>
