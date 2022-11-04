@@ -11,7 +11,7 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src={{ asset(Auth::guard('admin')->check() ? Auth::guard('admin')->user()->image : "images/unknown.webp" )}} class="img-circle elevation-2" alt="User Image">
+        <img src={{ asset(Auth::guard('admin')->check() ? url('storage/'.Auth::guard('admin')->user()->photo) : "images/unknown.webp" )}} class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
         <a href="#" class="d-block">{{ Auth::guard('admin')->check() ? Auth::guard('admin')->user()->name : "Unknown"}}</a>
@@ -19,16 +19,16 @@
     </div>
 
     <!-- SidebarSearch Form -->
-    <div class="form-inline">
+    {{--  <div class="form-inline">
       <div class="input-group" data-widget="sidebar-search">
         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
+        <div class="input-group-append"
           <button class="btn btn-sidebar">
             <i class="fas fa-search fa-fw"></i>
           </button>
         </div>
       </div>
-    </div>
+    </div>  --}}
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
@@ -36,18 +36,35 @@
         <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
         <li class="nav-item menu-open">
-          <a href="#" class="nav-link active">
+          <a href="{{route('admin.home')}}" class="nav-link @if(Session::get('pageTitle') == 'Home')
+            active
+          @endif">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
               Dashboard
+              <i class="right "></i>
+            </p>
+          </a>
+        </li>
+        <li class="nav-item {{Session::get('pageTitle') == 'Profile' ? 'menu-open ':''}}">
+          <a href="" class="nav-link {{Session::get('pageTitle') == 'Profile' ? 'active ':''}}">
+            <i class="nav-icon fa fa-user"></i>
+            <p>
+              Profile
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="./index.html" class="nav-link active">
+              <a href="{{route('admin.profile.changePassword')}}" class="nav-link ">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Dashboard v1</p>
+                <p>Change Password</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.profile.update')}}" class="nav-link ">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Update Profile</p>
               </a>
             </li>
           </ul>

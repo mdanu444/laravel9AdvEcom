@@ -20,7 +20,9 @@
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            @yield('pagename')
+            @if (Session::has('pageTitle'))
+                {{Session::get('pageTitle')}}
+            @endif
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
