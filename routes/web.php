@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ProductSectionController;
+use App\Http\Controllers\ProductCategoryController;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +24,15 @@ Route::get('/', function () {
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['guest:admin', 'PreventBackHistory'])->group(function(){
+        Route::view('/login', 'admin.login')->name('login');
+        Route::post('/login', [AdminController::class, 'check'])->name('check');
+        Route::view('/register', 'admin.register')->name('register');
+        Route::post('/register', [AdminController::class, 'save'])->name('save');
+    });
+
+
+
     Route::middleware(['auth:admin', 'PreventBackHistory'])->group(function(){
 
         Route::get('/logout', function(){
@@ -37,18 +48,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/profile/password', function () {
             Session::put('pageTitle', 'Profile');
-            return view('admin.profile-changePassword');
+            return view('admin.profile.profile-changePassword');
         })->name('profile.changePassword');
 
         Route::put('/profile/password', [AdminController::class, 'changepse'])->name('profile.updatepsw');
 
         Route::get('/profile/update', [AdminController::class, 'profileview'])->name('profile.update');
         Route::put('/profile/update', [AdminController::class, 'profileupdater'])->name('profile.updater');
+
+// Product Category
+        Route::resource('/productsections', ProductSectionController::class);
+        Route::resource('/productcategory', ProductCategoryController::class);
     });
-    Route::middleware(['guest:admin', 'PreventBackHistory'])->group(function(){
-        Route::view('/login', 'admin.login')->name('login');
-        Route::post('/login', [AdminController::class, 'check'])->name('check');
-        Route::view('/register', 'admin.register')->name('register');
-        Route::post('/register', [AdminController::class, 'save'])->name('save');
-    });
+
 });

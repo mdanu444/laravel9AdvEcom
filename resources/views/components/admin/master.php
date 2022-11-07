@@ -1,5 +1,12 @@
 @include('templates/header')
 <body class="hold-transition sidebar-mini layout-fixed">
+    <script>
+        function activer(){
+            alert('asdf');
+            //alert(sessionStorage.getItem('activer'));
+        };
+        activer()
+    </script>
 <div class="wrapper">
 @include('templates/preloader')
 {{--  <x-preloader />  --}}

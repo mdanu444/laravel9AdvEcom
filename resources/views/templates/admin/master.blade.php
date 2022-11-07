@@ -1,5 +1,5 @@
 <x-admin.header/>
-<body class="hold-transition sidebar-mini layout-fixed"  >
+<body onload="activer()" class="hold-transition sidebar-mini layout-fixed"  >
 
 
 

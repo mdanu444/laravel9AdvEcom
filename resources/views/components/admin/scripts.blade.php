@@ -1,4 +1,4 @@
-<!-- jQuery -->
+{{--  <!-- jQuery -->
 <script src={{ asset("plugins/jquery/jquery.min.js") }}></script>
 <!-- jQuery UI 1.11.4 -->
 <script src={{ asset("plugins/jquery-ui/jquery-ui.min.js") }}></script>
@@ -31,4 +31,10 @@
 <!-- AdminLTE for demo purposes -->
 {{--  <script src={{ asset("dist/js/demo.js") }}></script>  --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src={{ asset("dist/js/pages/dashboard.js") }}></script>
+<script src={{ asset("dist/js/pages/dashboard.js") }}></script>  --}}
+
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+    });
+</script>

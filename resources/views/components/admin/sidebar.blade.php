@@ -30,12 +30,15 @@
       </div>
     </div>  --}}
 
+
+
+
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
-        <li class="nav-item menu-open">
+        <li class="nav-item">
           <a href="{{route('admin.home')}}" class="nav-link @if(Session::get('pageTitle') == 'Home')
             active
           @endif">
@@ -46,7 +49,7 @@
             </p>
           </a>
         </li>
-        <li class="nav-item {{Session::get('pageTitle') == 'Profile' ? 'menu-open ':''}}">
+        <li class="nav-item {{Session::get('pageTitle') == 'Profile' ? 'menu-open':''}}">
           <a href="" class="nav-link {{Session::get('pageTitle') == 'Profile' ? 'active ':''}}">
             <i class="nav-icon fa fa-user"></i>
             <p>
@@ -56,15 +59,38 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{route('admin.profile.changePassword')}}" class="nav-link ">
+              <a href="{{route('admin.profile.changePassword')}}" class="nav-link   activable" activable="pwdchange" onclick="linkactiver(event)">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Change Password</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{route('admin.profile.update')}}" class="nav-link ">
+              <a href="{{route('admin.profile.update')}}" class="nav-link   activable" activable="profileupdate" onclick="linkactiver(event)">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Update Profile</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item {{Session::get('pageTitle') == 'Product Category' ? 'menu-open ':''}}">
+          <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product Category' ? 'active ':''}}">
+            <i class="nav-icon fa fa-user"></i>
+            <p>
+                Product Category
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{route('admin.productsections.index')}}" class="nav-link    activable" activable="productsection" onclick="linkactiver(event)">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Section</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.productcategory.index')}}" class="nav-link   activable" activable="productcategory" onclick="linkactiver(event)">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Category</p>
               </a>
             </li>
           </ul>
@@ -74,4 +100,31 @@
     <!-- /.sidebar-menu -->
   </div>
   <!-- /.sidebar -->
+  <script>
+    function linkactiver(event){
+        event.preventDefault();
+        let parent = event.target.parentNode;
+        if(parent.getAttribute('activable')){
+            let attribute = parent.getAttribute('activable');
+            //console.log(parent.getAttribute('activable'))
+           sessionStorage.setItem('activer', attribute);
+           //console.log(sessionStorage.getItem('activer'));
+           window.location = parent.getAttribute('href');
+        }else{
+            let attribute = parent.childNodes[1].getAttribute('activable');
+            //console.log(parent.childNodes[1].getAttribute('activable'))
+            sessionStorage.setItem('activer', attribute);
+            //console.log(sessionStorage.getItem('activer'));
+            window.location = parent.childNodes[1].getAttribute('href');
+        }
+    }
+    function activer(){
+        let activables = document.querySelectorAll('.activable');
+        for (let activable of activables){
+            if (activable.getAttribute('activable') == sessionStorage.getItem('activer')){
+                activable.classList.add('active');
+            }
+        }
+    }
+  </script>
 </aside>

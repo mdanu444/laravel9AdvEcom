@@ -69,7 +69,7 @@ class AdminController extends Controller
 
     function profileview(){
         Session::put('pageTitle', "Profile");
-        return view('admin.profile-update');
+        return view('admin.profile.profile-update');
     }
 
     function profileupdater(Request $request){
