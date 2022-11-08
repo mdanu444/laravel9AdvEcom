@@ -49,8 +49,10 @@
 
  <script>
     function hiddable(){
-        let myCustomAlert = document.getElementById('myCustomAlert');
-    myCustomAlert.style.display = 'none';
+            if(let myCustomAlert = document.getElementById('myCustomAlert')){
+            let myCustomAlert = document.getElementById('myCustomAlert');
+            myCustomAlert.style.display = 'none';
+        }
     }
 setTimeout(hiddable, 5000);
  </script>

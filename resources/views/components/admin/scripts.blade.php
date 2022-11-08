@@ -36,5 +36,15 @@
 <script>
     $(document).ready(function() {
         $('.js-example-basic-single').select2();
+
+        // $("#selectionloader").on('select2:select', (e)=>{
+           //  let loadableClass = "." + $("#selectionloader").attr('loadableClass');
+           //  let loadable = $(loadableClass);
+            // console.log(document.querySelector('.categoryoptionviewer'));
+        // });
+
     });
+
+
+
 </script>

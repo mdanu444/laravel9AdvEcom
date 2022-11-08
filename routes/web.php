@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductSectionController;
+use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\ProductCategoryController;
+
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +61,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Product Category
         Route::resource('/productsections', ProductSectionController::class);
         Route::resource('/productcategory', ProductCategoryController::class);
+        Route::resource('/productsubcategory', ProductSubCategoryController::class);
+        Route::post('/getcategorybysection', [ProductSubCategoryController::class, 'getcategorybysection'])->name('getcategorybysection');
     });
 
 });

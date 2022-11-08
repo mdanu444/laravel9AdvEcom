@@ -93,6 +93,12 @@
                 <p>Category</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{route('admin.productsubcategory.index')}}" class="nav-link   activable" activable="productsubcategory" onclick="linkactiver(event)">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sub Category</p>
+              </a>
+            </li>
           </ul>
         </li>
       </ul>
