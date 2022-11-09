@@ -74,5 +74,4 @@
   <!-- summernote -->
   <link rel="stylesheet" href={{ asset("plugins/summernote/summernote-bs4.min.css")}}>
 
-
 </head>

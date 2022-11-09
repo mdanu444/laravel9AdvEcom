@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductSectionController;
+use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Models\Admin\ProductSection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +38,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::middleware(['auth:admin', 'PreventBackHistory'])->group(function(){
 
+        Route::post('/statuschanger', function(Request $request){
+            if($request->status == "productsection"){
+                $productSection = ProductSection::findOrfail($request->id);
+                if($productSection->status == 1){
+                    $productSection->status = 0;
+                }else{
+                    $productSection->status = 1;
+                }
+                $productSection->save();
+                return ['status' => true];
+
+            }
+        });
+
+
         Route::get('/logout', function(){
             Auth::guard('admin')->logout();
             return redirect()->route('admin.login');
@@ -59,6 +77,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Product Category
         Route::resource('/productsections', ProductSectionController::class);
         Route::resource('/productcategory', ProductCategoryController::class);
+        Route::resource('/productsubcategory', ProductSubCategoryController::class);
+        Route::get('/getcategorybysection/{id}', [ProductSubCategoryController::class, 'getcategorybysection'])->name('getcategorybysection');
     });
 
 });
