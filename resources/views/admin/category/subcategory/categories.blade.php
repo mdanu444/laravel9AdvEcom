@@ -1,3 +1,4 @@
-@foreach ($section->product_categories as $category)
-    <option value="{{ $category->id }}">{{ $category->title }}</option>
+<option value="">Select Category</option>
+@foreach ($categories as $category)
+    <option value="{{ Crypt::encryptString($category->id) }}">{{ $category->title }}</option>
 @endforeach

@@ -5,7 +5,7 @@
 <div class="card col-md-6">
     <div class="card-header bg-primary">Product Section</div>
     <div class="card-body">
-        <form action="{{ route('admin.productsections.update', $item->id) }}" method="POST">
+        <form action="{{ route('admin.productsections.update', Crypt::encryptString($item->id)) }}" method="POST">
             @csrf
             @method('put')
             <div class="form-group">

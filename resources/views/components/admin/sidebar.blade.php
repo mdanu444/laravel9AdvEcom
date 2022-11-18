@@ -74,7 +74,7 @@
         </li>
         <li class="nav-item {{Session::get('pageTitle') == 'Product Category' ? 'menu-open ':''}}">
           <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product Category' ? 'active ':''}}">
-            <i class="nav-icon fa fa-user"></i>
+            <i class="nav-icon fa fa-clipboard"></i>
             <p>
                 Product Category
               <i class="right fas fa-angle-left"></i>

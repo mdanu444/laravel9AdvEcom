@@ -16,7 +16,6 @@
           <th>Title</th>
           <th>Section</th>
           <th>Status</th>
-          <th>Photo</th>
           <th>Action</th>
         </tr>
         </thead>
@@ -25,22 +24,22 @@
             <tr>
                 <td>{{ $item->id }}</td>
                 <td>{{ $item->title }}</td>
-                <td>{{ $item->product_sections->title }}</td>
+                <td>{{ !empty($item->product_sections->title)?$item->product_sections->title:"Other" }}</td>
                 <td>
                     <div class="form-group">
                         <div class="custom-control custom-switch">
-                          <input type="checkbox"  class="custom-control-input statuschanger" status="productsection" id="customSwitch{{$item->id}}" {{ $item->status == 1? "checked":"" }}>
+                          <input type="checkbox"  class="custom-control-input statuschanger" status="productsubcategory" id="customSwitch{{$item->id}}" {{ $item->status == 1? "checked":"" }}>
                           <label class="custom-control-label" for="customSwitch{{$item->id}}"></label>
                         </div>
                     </div>
                 </td>
                 <td class="d-flex">
-                    <form method="post" action="{{ route('admin.productcategory.destroy', $item->id) }}">
+                    <form method="post" action="{{ route('admin.productcategory.destroy', Crypt::encryptString($item->id)) }}">
                         @csrf
                         @method('delete')
                         <button class="border-0 bg-primary p-3" type="submit"><i class="fa fa-trash "></i></button>
                     </form>
-                    <a class="bg-primary p-3 ml-2"  href="{{ route('admin.productcategory.edit', $item->id) }}"><i class="fa fa-pen"></i></a>
+                    <a class="bg-primary p-3 ml-2"  href="{{ route('admin.productcategory.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
                 </td>
               </tr>
             @endforeach
@@ -51,7 +50,6 @@
             <th>Id</th>
             <th>Title</th>
             <th>Section</th>
-            <th>Photo</th>
             <th>Status</th>
             <th>Action</th>
         </tr>

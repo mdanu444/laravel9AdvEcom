@@ -80,4 +80,30 @@
             });
         };
     }
+
+    $(document).ready(()=>{
+        $(".selecttion").select2();
+    })
+
+
+
+    $(document).ready(()=>{
+        if($("#selectionloader")){
+            $("#selectionloader").on('select2:select', function (e) {
+            let formData = new FormData();
+            formData.append('id', e.target.value);
+            let loadableClass = $("#selectionloader").attr('loadableClass');
+            url = window.location.origin +'/'+ $("#selectionloader").attr('location');
+            let loadable = $("."+loadableClass)[0];
+
+            fetch(url, {
+                method:'post',
+                body: formData
+            }).then(res => res.json())
+            .then((data)=>{
+                loadable.innerHTML = data.html
+            });
+        });
+       }
+     })
 </script>

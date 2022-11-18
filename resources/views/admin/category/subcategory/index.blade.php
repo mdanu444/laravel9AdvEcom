@@ -9,7 +9,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header bg-primary ">
-              <h3 class="card-title">Product Sub Category</h3>
+              <h3 class="card-title">Product Sub Category List</h3>
               <div class="text-right float-right">
                 <a href="{{route('admin.productsubcategory.create')}}" class="btn btn-light">+ Add New</a>
               </div>
@@ -22,7 +22,7 @@
                   <th>Id</th>
                   <th>Title</th>
                   <th>Category</th>
-                  <th>Section</th>
+                  <th>Status</th>
                   <th class="w-25">Action</th>
                 </tr>
                 </thead>
@@ -34,15 +34,22 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->title }}</td>
-                            <td>{{ $item->product_categories->title }}</td>
-                            <td>{{ $item->product_sections->title }}</td>
+                            <td>{{ !empty($item->product_categories->title)?$item->product_categories->title:"Other" }}</td>
+                            <td>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                      <input type="checkbox"  class="custom-control-input statuschanger" status="productsubcategory" id="customSwitch{{$item->id}}" {{ $item->status == 1? "checked":"" }}>
+                                      <label class="custom-control-label" for="customSwitch{{$item->id}}"></label>
+                                    </div>
+                                </div>
+                            </td>
                             <td class="w-25">
-                                <form class="d-inline" style="cursor: pointer" action="{{ route('admin.productsubcategory.destroy', $item->id) }}" method="POST">
+                                <form class="d-inline" style="cursor: pointer" action="{{ route('admin.productsubcategory.destroy', Crypt::encryptString($item->id)) }}" method="POST">
                                     @csrf
                                     @method('delete')
                                     <button class="border-0" type="submit"><i class="fa fa-trash p-3 bg-primary"></i></button>
                                 </form>
-                                <a class="ml-3 bg-primary text-dark p-3" href="{{ route('admin.productsubcategory.edit', $item->id) }}"><i class="fa fa-pen"></i></a>
+                                <a class="ml-3 bg-primary text-dark p-3" href="{{ route('admin.productsubcategory.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -52,7 +59,7 @@
                     <th>Id</th>
                     <th>Title</th>
                     <th>Category</th>
-                    <th>Section</th>
+                    <th>Status</th>
                     <th class="w-25">Action</th>
                 </tr>
                 </tfoot>

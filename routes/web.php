@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductSection;
+use App\Models\Admin\ProductSubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -40,15 +42,35 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::post('/statuschanger', function(Request $request){
             if($request->status == "productsection"){
-                $productSection = ProductSection::findOrfail($request->id);
-                if($productSection->status == 1){
-                    $productSection->status = 0;
+                $item = ProductSection::findOrfail($request->id);
+                if($item->status == 1){
+                    $item->status = 0;
                 }else{
-                    $productSection->status = 1;
+                    $item->status = 1;
                 }
-                $productSection->save();
+                $item->save();
                 return ['status' => true];
 
+            }
+            if($request->status == "productcategory"){
+                $item = ProductCategory::findOrfail($request->id);
+                if($item->status == 1){
+                    $item->status = 0;
+                }else{
+                    $item->status = 1;
+                }
+                $item->save();
+                return ['status' => true];
+            }
+            if($request->status == "productsubcategory"){
+                $item = ProductSubCategory::findOrfail($request->id);
+                if($item->status == 1){
+                    $item->status = 0;
+                }else{
+                    $item->status = 1;
+                }
+                $item->save();
+                return ['status' => true];
             }
         });
 
@@ -78,7 +100,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('/productsections', ProductSectionController::class);
         Route::resource('/productcategory', ProductCategoryController::class);
         Route::resource('/productsubcategory', ProductSubCategoryController::class);
-        Route::get('/getcategorybysection/{id}', [ProductSubCategoryController::class, 'getcategorybysection'])->name('getcategorybysection');
+        Route::post('/getcategorybysection', [ProductSubCategoryController::class, 'getcategorybysection'])->name('getcategorybysection');
     });
 
 });

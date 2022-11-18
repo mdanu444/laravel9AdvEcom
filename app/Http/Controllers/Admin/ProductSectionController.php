@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\ProductSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Crypt;
 
 class ProductSectionController extends Controller
 {
@@ -66,8 +67,9 @@ class ProductSectionController extends Controller
      */
     public function edit($id)
     {
+        $did = Crypt::decryptString($id);
         Session::put('pageTitle', 'Product Category');
-        $data = ProductSection::findOrFail($id);
+        $data = ProductSection::findOrFail($did);
         return view('admin.category.section.edit', ['item'=> $data]);
     }
 
@@ -80,7 +82,8 @@ class ProductSectionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $productSection = ProductSection::find($id);
+        $did = Crypt::decryptString($id);
+        $productSection = ProductSection::find($did);
         $productSection->title = $request->title;
         $productSection->save();
         return redirect()->back()->with('message', 'Product Section Updated!');
@@ -94,7 +97,8 @@ class ProductSectionController extends Controller
      */
     public function destroy($id)
     {
-        ProductSection::destroy($id);
+        $did = Crypt::decryptString($id);
+        ProductSection::destroy($did);
         return redirect()->route('admin.productsections.index')->with('message', "Section Deleted Successfull!");
     }
 }
