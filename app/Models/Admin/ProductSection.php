@@ -18,4 +18,7 @@ class ProductSection extends Model
     {
         return $this->hasMany(ProductSubCategory::class);
     }
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
 }

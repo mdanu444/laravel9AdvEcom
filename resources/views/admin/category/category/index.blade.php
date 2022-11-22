@@ -37,7 +37,7 @@
                     <form method="post" action="{{ route('admin.productcategory.destroy', Crypt::encryptString($item->id)) }}">
                         @csrf
                         @method('delete')
-                        <button class="border-0 bg-primary p-3" type="submit"><i class="fa fa-trash "></i></button>
+                        <button class="delete border-0 bg-primary p-3" type="submit"><i class="fa fa-trash "></i></button>
                     </form>
                     <a class="bg-primary p-3 ml-2"  href="{{ route('admin.productcategory.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
                 </td>

@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BrandsController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductSection;
 use App\Models\Admin\ProductSubCategory;
@@ -72,6 +75,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 $item->save();
                 return ['status' => true];
             }
+            if($request->status == "product"){
+                $item = Product::findOrfail($request->id);
+                if($item->status == 1){
+                    $item->status = 0;
+                }else{
+                    $item->status = 1;
+                }
+                $item->save();
+                return ['status' => true];
+            }
         });
 
 
@@ -96,11 +109,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/profile/update', [AdminController::class, 'profileview'])->name('profile.update');
         Route::put('/profile/update', [AdminController::class, 'profileupdater'])->name('profile.updater');
 
-// Product Category
+// Product Catelogues
         Route::resource('/productsections', ProductSectionController::class);
         Route::resource('/productcategory', ProductCategoryController::class);
         Route::resource('/productsubcategory', ProductSubCategoryController::class);
         Route::post('/getcategorybysection', [ProductSubCategoryController::class, 'getcategorybysection'])->name('getcategorybysection');
+        Route::resource('productbrands', BrandsController::class);
+        Route::resource('product', ProductController::class);
+        Route::post('/getsubcategorybysection', [ProductController::class, 'getsubcategorybysection'])->name('getsubcategorybysection');
     });
 
 });

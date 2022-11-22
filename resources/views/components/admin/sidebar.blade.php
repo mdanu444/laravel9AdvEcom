@@ -76,7 +76,7 @@
           <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product Category' ? 'active ':''}}">
             <i class="nav-icon fa fa-clipboard"></i>
             <p>
-                Product Category
+                Catelogues
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
@@ -99,7 +99,30 @@
                 <p>Sub Category</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{route('admin.productbrands.index')}}" class="nav-link   activable" activable="productbrands" onclick="linkactiver(event)">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Product Brand</p>
+              </a>
+            </li>
           </ul>
+          <li class="nav-item {{Session::get('pageTitle') == 'Product' ? 'menu-open ':''}}">
+            <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product' ? 'active ':''}}">
+              <i class="nav-icon fab fa-product-hunt"></i>
+              <p>
+                  Products
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('admin.product.index')}}" class="nav-link activable" activable="product" onclick="linkactiver(event)">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Product List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
         </li>
       </ul>
     </nav>

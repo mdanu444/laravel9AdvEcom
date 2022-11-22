@@ -88,6 +88,26 @@
 
 
     $(document).ready(()=>{
+        if($(".selectionloader")){
+            $(".selectionloader").on('select2:select', function (e) {
+            let formData = new FormData();
+            formData.append('id', e.target.value);
+            let loadableClass = $(".selectionloader").attr('loadableClass');
+            url = window.location.origin +'/'+ $(".selectionloader").attr('location');
+            let loadable = $("."+loadableClass)[0];
+
+            fetch(url, {
+                method:'post',
+                body: formData
+            }).then(res => res.json())
+            .then((data)=>{
+                loadable.innerHTML = data.html
+            });
+        });
+       }
+     })
+
+    $(document).ready(()=>{
         if($("#selectionloader")){
             $("#selectionloader").on('select2:select', function (e) {
             let formData = new FormData();
@@ -106,4 +126,33 @@
         });
        }
      })
+
+        $(document).ready(()=>{
+
+
+            $('.delete').click((e)=>{
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log(e.target);
+                        if(e.target.parentElement.classList[0] == 'delete'){
+                            e.target.parentElement.parentElement.submit();
+                        }else{
+                            e.target.parentElement.submit();
+                        }
+                    }
+                  })
+
+            })
+        });
+
+
 </script>

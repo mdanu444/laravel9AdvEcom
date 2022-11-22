@@ -24,4 +24,13 @@ class ProductCategory extends Model
     {
         return $this->belongsTo(ProductSection::class);
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+    public function product_sub_categories()
+    {
+        return $this->hasMany(ProductSubCategory::class);
+    }
 }

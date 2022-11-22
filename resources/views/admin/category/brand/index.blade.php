@@ -4,8 +4,8 @@
 
 <div class="card">
     <div class="card-header bg-primary">
-      <h3 class="card-title">Product Section List</h3>
-      <a href="{{ route('admin.productsections.create') }}" class="btn btn-light float-right" style="color: black !important;">+ Add New</a>
+      <h3 class="card-title">Product Brand List</h3>
+      <a href="{{ route('admin.productbrands.create') }}" class="btn btn-light float-right" style="color: black !important;">+ Add New</a>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
@@ -32,12 +32,12 @@
                     </div>
                 </td>
                 <td class="d-flex">
-                    <form method="post" action="{{ route('admin.productsections.destroy', Crypt::encryptString($item->id)) }}">
+                    <form method="post" action="{{ route('admin.productbrands.destroy', Crypt::encryptString($item->id)) }}">
                         @csrf
                         @method('delete')
                         <button class="delete border-0 bg-primary p-3" type="submit"><i class="fa fa-trash "></i></button>
                     </form>
-                    <a class="bg-primary p-3 ml-2"  href="{{ route('admin.productsections.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
+                    <a class="bg-primary p-3 ml-2"  href="{{ route('admin.productbrands.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
                 </td>
               </tr>
             @endforeach

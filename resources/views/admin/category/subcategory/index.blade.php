@@ -47,7 +47,7 @@
                                 <form class="d-inline" style="cursor: pointer" action="{{ route('admin.productsubcategory.destroy', Crypt::encryptString($item->id)) }}" method="POST">
                                     @csrf
                                     @method('delete')
-                                    <button class="border-0" type="submit"><i class="fa fa-trash p-3 bg-primary"></i></button>
+                                    <button class="delete border-0" type="submit"><i class="fa fa-trash p-3 bg-primary"></i></button>
                                 </form>
                                 <a class="ml-3 bg-primary text-dark p-3" href="{{ route('admin.productsubcategory.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
                             </td>

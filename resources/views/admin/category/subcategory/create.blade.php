@@ -13,7 +13,7 @@
 
             <div class="form-group">
                 <label for="selectionloader">Section</label>
-                <select location="admin/getcategorybysection" loadableClass="categoryoptionviewer"  class="col-md-11 form-control js-example-basic-single selecttion" name="product_sections_id"  id="selectionloader">
+                <select location="admin/getcategorybysection" loadableClass="categoryoptionviewer"  class="selectionloader col-md-11 form-control js-example-basic-single selecttion" name="product_sections_id"  id="selectionloader">
                     <option selected value="">Select Section</option>
                     @foreach ($sections as $section)
                         <option value="{{ Crypt::encryptString($section->id) }}">{{ $section->title }}</option>

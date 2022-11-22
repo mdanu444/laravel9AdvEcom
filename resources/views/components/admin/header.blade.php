@@ -73,5 +73,5 @@
   <link rel="stylesheet" href={{ asset("plugins/daterangepicker/daterangepicker.css")}}>
   <!-- summernote -->
   <link rel="stylesheet" href={{ asset("plugins/summernote/summernote-bs4.min.css")}}>
-
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
