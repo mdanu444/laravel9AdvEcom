@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandsController;
+use App\Http\Controllers\Admin\ProductsAttributeController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\ProductCategoryController;
@@ -117,6 +119,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('productbrands', BrandsController::class);
         Route::resource('product', ProductController::class);
         Route::post('/getsubcategorybysection', [ProductController::class, 'getsubcategorybysection'])->name('getsubcategorybysection');
+        Route::resource('product/{product}/p_attribute', ProductsAttributeController::class);
+        Route::resource('product/{product}/p_image', ProductImageController::class);
     });
 
 });

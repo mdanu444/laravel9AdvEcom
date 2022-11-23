@@ -142,10 +142,11 @@
                     confirmButtonText: 'Yes, delete it!'
                   }).then((result) => {
                     if (result.isConfirmed) {
-                        console.log(e.target);
                         if(e.target.parentElement.classList[0] == 'delete'){
+                            console.log(e.target.parentElement.parentElement);
                             e.target.parentElement.parentElement.submit();
                         }else{
+                            console.log(e.target.parentElement);
                             e.target.parentElement.submit();
                         }
                     }
@@ -153,6 +154,8 @@
 
             })
         });
+
+        
 
 
 </script>

@@ -74,7 +74,11 @@
                     <option selected value="">Select Brand</option>
                     <option value="{{ Crypt::encryptString(0) }}">None</option>
                     @foreach ($brands as $brand)
-                        <option value="{{ Crypt::encryptString($brand->id) }}">{{ $brand->title }}</option>
+                        <option
+                        @if ($data->brands_id == $brand->id)
+                            selected
+                        @endif
+                        value="{{ Crypt::encryptString($brand->id) }}">{{ $brand->title }}</option>
                     @endforeach
                 </select>
                 @error('product_categories_id')
@@ -85,7 +89,7 @@
 
             <div class="form-group">
                 <label for="title">Enter Title</label>
-                <input value="{{ old('title') }}" class="form-control col-md-11" type="text" name="title" id="title">
+                <input value="{{ $data->title }}" class="form-control col-md-11" type="text" name="title" id="title">
                 @error('title')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -94,7 +98,7 @@
 
             <div class="">
                 <label for="code">Enter Product Code</label>
-                <input value="{{ old('code') }}" class="form-control col-md-11" type="text" name="code" id="code">
+                <input value="{{ $data->code }}" class="form-control col-md-11" type="text" name="code" id="code">
                 @error('code')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -103,7 +107,7 @@
 
             <div class="">
                 <label for="color">Enter Product Color</label>
-                <input value="{{ old('color') }}" class="form-control col-md-11" type="text" name="color" id="color">
+                <input value="{{ $data->color }}" class="form-control col-md-11" type="text" name="color" id="color">
                 @error('color')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -112,7 +116,7 @@
 
             <div class="">
                 <label for="unit">Enter Unit title [Piece/Kg./Liter/etc.]</label>
-                <input value="{{ old('unit') }}" class="form-control col-md-11" type="text" name="unit" id="unit">
+                <input value="{{ $data->unit }}" class="form-control col-md-11" type="text" name="unit" id="unit">
                 @error('unit')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -121,7 +125,7 @@
 
             <div class="">
                 <label for="weight">Weight [in Gram]</label>
-                <input value="{{ old('weight') }}" class="form-control col-md-11" type="text" name="weight" id="weight">
+                <input value="{{ $data->weight }}" class="form-control col-md-11" type="text" name="weight" id="weight">
                 @error('weight')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -130,7 +134,7 @@
 
             <div class="">
                 <label for="price">Unit Price</label>
-                <input value="{{ old('price') }}" class="form-control col-md-11" type="number" min="5" name="price" id="price">
+                <input value="{{ $data->price }}" class="form-control col-md-11" type="number" min="5" name="price" id="price">
                 @error('price')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -139,7 +143,7 @@
 
             <div class="">
                 <label for="discount">Discount (%)</label>
-                <input value="{{ old('discount') }}" class="form-control col-md-11" type="number" min="0" name="discount" id="discount">
+                <input value="{{ $data->discount }}" class="form-control col-md-11" type="number" min="0" name="discount" id="discount">
                 @error('discount')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -149,14 +153,24 @@
             <div class="form-group">
                 <label for="featured">Select Featured or not ?</label><br>
                 <select  class="col-md-11 form-control selecttion" name="featured" id="featured">
+                    @if ($data->featured == 0)
                     <option selected value="0">No</option>
                     <option value="1">Yes</option>
+                    @else
+                    <option  value="0">No</option>
+                    <option selected value="1">Yes</option>
+                    @endif
                 </select>
                 @error('product_categories_id')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
-
+            <div>
+                <a href="{{ url('video/product_video/'.$data->video) }}" download >Download Video</a>
+            </div>
+            <div>
+                <img height="100" width="100" src="{{ url('images/product_image/small/'.$data->image) }}" alt="">
+            </div>
             <div class="">
                 <label for="video">Upload Video</label>
                 <input  class="form-control col-md-11" type="file" accept="video/*" name="video" id="video">
@@ -175,7 +189,7 @@
 
             <div class="">
                 <label for="description">Product Description</label>
-                <textarea class="form-control col-md-11" name="description" id="description">{{ old('description') }}</textarea>
+                <textarea class="form-control col-md-11" name="description" id="description">{{ $data->description }}</textarea>
                 @error('discount')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -183,7 +197,7 @@
 
             <div class="">
                 <label for="wash_care">Wash Care [if any]</label>
-                <input value="{{ old('wash_care') }}" class="form-control col-md-11" type="text" name="wash_care" id="wash_care">
+                <input value="{{ $data->wash_care }}" class="form-control col-md-11" type="text" name="wash_care" id="wash_care">
                 @error('wash_care')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -191,7 +205,7 @@
 
             <div class="">
                 <label for="fabric">Fabric [Cotton/Polister/etc.]</label>
-                <input value="{{ old('fabric') }}" class="form-control col-md-11" type="text" name="fabric" id="fabric">
+                <input value="{{ $data->fabric }}" class="form-control col-md-11" type="text" name="fabric" id="fabric">
                 @error('fabric')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -202,12 +216,12 @@
             <div class="form-group">
                 <label for="pattern">Select Pattern</label><br>
                 <select  class="col-md-11 form-control selecttion" name="pattern" id="pattern">
-                    <option selected value="Checked">Checked</option>
-                    <option value="Plain">Plain</option>
-                    <option value="Printed">Printed</option>
-                    <option value="Self">Self</option>
-                    <option value="Solid">Solid</option>
-                    <option value="0">None</option>
+                    <option {{ $data->pattern == 'Checked'? 'selected':'' }} value="Checked">Checked</option>
+                    <option {{ $data->pattern == 'Plain'? 'selected':'' }} value="Plain">Plain</option>
+                    <option {{ $data->pattern == "Printed"? 'selected':'' }} value="Printed">Printed</option>
+                    <option {{ $data->pattern == "Self"? 'selected':'' }} value="Self">Self</option>
+                    <option {{ $data->pattern == "Solid"? 'selected':'' }} value="Solid">Solid</option>
+                    <option {{ $data->pattern == 0? 'selected':'' }} value="0">None</option>
                 </select>
                 @error('pattern')
                     <span class="text-danger">{{ $message }}</span>
@@ -217,13 +231,13 @@
             <div class="form-group">
                 <label for="sleeve">Select Sleeve Type [if any]</label><br>
                 <select  class="col-md-11 form-control selecttion" name="sleeve" id="sleeve">
-                    <option selected value="Full Sleeve">Full Sleeve</option>
-                    <option value="Half Sleeve">Half Sleeve</option>
-                    <option value="Short Sleeve">Short Sleeve</option>
-                    <option value="Sleeveless">Sleeveless</option>
-                    <option value="0">None</option>
+                    <option {{ $data->sleeve == "Full Sleeve" ?'selected':''}} selected value="Full Sleeve">Full Sleeve</option>
+                    <option  {{ $data->sleeve == "Half Sleeve"?'selected':'' }} value="Half Sleeve">Half Sleeve</option>
+                    <option  {{ $data->sleeve == "Short Sleeve"?'selected':'' }} value="Short Sleeve">Short Sleeve</option>
+                    <option  {{ $data->sleeve == "Sleeveless"?'selected':'' }} value="Sleeveless">Sleeveless</option>
+                    <option  {{ $data->sleeve == 0?'selected':'' }} value="0">None</option>
                 </select>
-                @error('pattern')
+                @error('sleeve')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -231,8 +245,8 @@
             <div class="form-group">
                 <label for="fit">Select Fit</label><br>
                 <select  class="col-md-11 form-control selecttion" name="fit" id="fit">
-                    <option selected value="Regular">Regular</option>
-                    <option value="Slim">Slim</option>
+                    <option {{ $data->fit == "Regular" ? "selected":'' }}  value="Regular">Regular</option>
+                    <option {{ $data->fit == "Slim" ? "selected":'' }} value="Slim">Slim</option>
                 </select>
                 @error('fit')
                     <span class="text-danger">{{ $message }}</span>
@@ -242,7 +256,7 @@
 
             <div class="">
                 <label for="occassion">Occassion [Regular/Casual/Party/Etc.]</label>
-                <input value="{{ old('occassion') }}" class="form-control col-md-11" type="text" name="occassion" id="occassion">
+                <input value="{{ $data->occassion }}" class="form-control col-md-11" type="text" name="occassion" id="occassion">
                 @error('occassion')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -251,7 +265,7 @@
 
             <div class="">
                 <label for="meta_title">Meta Title</label>
-                <input value="{{ old('meta_title') }}" class="form-control col-md-11" type="text" name="meta_title" id="meta_title">
+                <input value="{{ $data->meta_title }}" class="form-control col-md-11" type="text" name="meta_title" id="meta_title">
                 @error('meta_title')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -261,7 +275,7 @@
 
             <div class="">
                 <label for="meta_keywords">Meta Keywords</label>
-                <input value="{{ old('meta_keywords') }}" class="form-control col-md-11" type="text" name="meta_keywords" id="meta_keywords">
+                <input value="{{ $data->meta_keywords }}" class="form-control col-md-11" type="text" name="meta_keywords" id="meta_keywords">
                 @error('meta_keywords')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -270,7 +284,7 @@
 
             <div class="">
                 <label for="meta_description">Meta Description</label>
-                <textarea value="" class="form-control col-md-11" type="textarea" name="meta_description" id="meta_description">{{ old('meta_description') }}</textarea>
+                <textarea value="" class="form-control col-md-11" type="textarea" name="meta_description" id="meta_description">{{ $data->meta_description }}</textarea>
                 @error('meta_description')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror

@@ -154,8 +154,8 @@ class ProductController extends Controller
         $section = ProductSection::all();
         $category = ProductCategory::where('product_sections_id', $data->product_sections_id)->get();
         $subcategory = ProductSubCategory::where('product_categories_id', $data->product_categories_id)->get();
-        $brannds = Brand::all();
-        return view('admin.product.product.edit', ['data'=> $data, 'sections' => $section, 'category' => $category, 'subcategory' => $subcategory, 'brands' => $brannds]);
+        $brands = Brand::all();
+        return view('admin.product.product.edit', ['data'=> $data, 'sections' => $section, 'category' => $category, 'subcategory' => $subcategory, 'brands' => $brands]);
     }
 
     /**
@@ -167,44 +167,87 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $did = Crypt::decryptString($id);
-        $ProductSubCategory = Product::findOrfail($did);
-        if(!$request->hasFile('image')){
-            $ProductSubCategory->title = $request->title;
-            $ProductSubCategory->discount = $request->discount;
-            $ProductSubCategory->description = $request->description;
-            $ProductSubCategory->meta_title = $request->meta_title;
-            $ProductSubCategory->meta_description = $request->meta_description;
-            $ProductSubCategory->meta_keywords = $request->meta_keywords;
-            $ProductSubCategory->url = $request->url;
-            $ProductSubCategory->product_sections_id = Crypt::decryptString($request->product_sections_id);
-            $ProductSubCategory->product_categories_id = Crypt::decryptString($request->product_categories_id);
-            $ProductSubCategory->save();
-        }
+        $request->validate([
+            'title' => 'required',
+            'discount' => 'integer',
+            'description' => 'required',
+            'featured' => 'required',
+            'brands_id' => 'required',
+            'code' => 'required',
+            'color' => 'required',
+            'price' => 'required',
+            'weight' => 'required',
+            'unit' => 'required',
+            'wash_care' => 'required',
+            'product_sections_id' => 'required',
+            'product_categories_id' => 'required',
+            'product_sub_categories_id' => 'required',
+        ], [
+            'product_sections_id.required' => 'Please Select Section',
+            'product_categories_id.required' => 'Please Select Category',
+            'product_sub_categories_id.required' => 'Please Select Sub Category',
+        ]);
+
+        $did=Crypt::decryptString($id);
+        $product = Product::findOrfail($did);
+        $product->title = $request->title;
+        $product->discount = $request->discount;
+        $product->description = $request->description;
+        $product->meta_title = $request->meta_title;
+        $product->meta_description = $request->meta_description;
+        $product->meta_keywords = $request->meta_keywords;
+        $product->brands_id = Crypt::decryptString($request->brands_id);
+        $product->code = $request->code;
+        $product->color = $request->color;
+        $product->unit = $request->unit;
+        $product->weight = $request->weight;
+        $product->price = $request->price;
+        $product->featured = $request->featured;
+        $product->wash_care = $request->wash_care;
+        $product->fabric = $request->fabric;
+        $product->pattern = $request->pattern;
+        $product->sleeve = $request->sleeve;
+        $product->fit = $request->fit;
+        $product->occassion = $request->occassion;
+        $product->product_sections_id = Crypt::decryptString($request->product_sections_id);
+        $product->product_categories_id = Crypt::decryptString($request->product_categories_id);
+        $product->product_sub_categories_id = Crypt::decryptString($request->product_sub_categories_id);
+
+
+
         if($request->hasFile('image')){
-            unlink($ProductSubCategory->image);
             $image_tmp = $request->file('image');
-            if($image_tmp->isValid()){
-                $image_extention = $image_tmp->getClientOriginalExtension();
-                $image_name = rand(111,999999).".".$image_extention;
-                $image_path = 'images/subcategory_image/'.$image_name;
-                $ProductSubCategory->image = $image_path;
-                // return ($image_path);
-                Image::make($image_tmp)->save($image_path);
-            }
-            // dd($request->all());
-            $ProductSubCategory->title = $request->title;
-            $ProductSubCategory->discount = $request->discount;
-            $ProductSubCategory->description = $request->description;
-            $ProductSubCategory->meta_title = $request->meta_title;
-            $ProductSubCategory->meta_description = $request->meta_description;
-            $ProductSubCategory->meta_keywords = $request->meta_keywords;
-            $ProductSubCategory->url = $request->url;
-            $ProductSubCategory->product_sections_id = Crypt::decryptString($request->product_sections_id);
-            $ProductSubCategory->product_categories_id = Crypt::decryptString($request->product_categories_id);
-            $ProductSubCategory->save();
+            $image_tmp->isValid();
+            $image_extention = $image_tmp->getClientOriginalExtension();
+            $image_name = rand(1,999).time().".".$image_extention;
+            $lg_image_path = 'images/product_image/larg/'.$image_name;
+            $md_image_path = 'images/product_image/medium/'.$image_name;
+            $sm_image_path = 'images/product_image/small/'.$image_name;
+            $product->image = $image_name;
+            // return ($image_path);
+            Image::make($image_tmp)->save($lg_image_path);
+            Image::make($image_tmp)->resize(520,600)->save($md_image_path);
+            Image::make($image_tmp)->resize(260,300)->save($sm_image_path);
+        }else{
+            $product->image = $product->image;
         }
-        return redirect()->back()->with('message', 'Product Category Updated!');
+
+        if($request->hasFile('video')){
+            $video_tmp = $request->file('video');
+            $video_extention = $video_tmp->getClientOriginalExtension();
+            $video_name = rand(111,999999).".".$video_extention;
+            $video_path = 'video/product_video/';
+            $product->video = $video_name;
+            // return ($image_path);
+            $video_tmp->move($video_path, $video_name);
+        }else{
+            $product->video = $product->video;
+        }
+
+
+        $product->save();
+
+        return redirect()->back()->with('message', "Product Updated Successfully!");
     }
 
     /**

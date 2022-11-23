@@ -37,9 +37,13 @@
                     <form method="post" action="{{ route('admin.product.destroy', Crypt::encryptString($item->id)) }}">
                         @csrf
                         @method('delete')
-                        <button class="delete border-0 bg-primary p-3" type="submit"><i class="fa fa-trash "></i></button>
+                        <button title="Delete Product" class="delete border-0 bg-primary p-3" type="submit"><i class="fa fa-trash "></i></button>
                     </form>
-                    <a class="bg-primary p-3 ml-2 "  href="{{ route('admin.product.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
+                    <a title="Edit Product" class="bg-primary p-3 ml-2 "  href="{{ route('admin.product.edit', Crypt::encryptString($item->id)) }}"><i class="fa fa-pen"></i></a>
+                    <a title="Product Attributes" class="bg-primary p-3 ml-2 "  href="{{ route('admin.p_attribute.index', Crypt::encryptString($item->id)) }}"><i class="fa fa-list"></i></a>
+                    <a title="Product Images" class="bg-primary p-3 ml-2 "  href="{{ route('admin.p_image.index', Crypt::encryptString($item->id)) }}"><i class="fa fa-image"></i></a>
+
+
                 </td>
               </tr>
             @endforeach
