@@ -12,13 +12,14 @@ class ProductSection extends Model
 
     public function product_categories()
     {
-        return $this->hasMany(ProductCategory::class);
+        return $this->hasMany(ProductCategory::class, 'product_sections_id');
     }
     public function product_sub_categories()
     {
-        return $this->hasMany(ProductSubCategory::class);
+        return $this->hasMany(ProductSubCategory::class, 'product_sections_id');
     }
-    public function products(){
+    public function products()
+    {
         return $this->hasMany(Product::class);
     }
 }

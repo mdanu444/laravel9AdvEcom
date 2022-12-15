@@ -29,12 +29,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('fontend.welcome');
+Route::name('frontend.')->group(function () {
+    Route::get('/', function () {
+        Session::put('pagetitle', 'home');
+        return view('frontend.welcome');
+    })->name('home');
 });
 
+
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::middleware(['guest:admin', 'PreventBackHistory'])->group(function(){
+    Route::middleware(['guest:admin', 'PreventBackHistory'])->group(function () {
         Route::view('/login', 'admin.login')->name('login');
         Route::post('/login', [AdminController::class, 'check'])->name('check');
         Route::view('/register', 'admin.register')->name('register');
@@ -43,45 +47,44 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
 
-    Route::middleware(['auth:admin', 'PreventBackHistory'])->group(function(){
+    Route::middleware(['auth:admin', 'PreventBackHistory'])->group(function () {
 
-        Route::post('/statuschanger', function(Request $request){
-            if($request->status == "productsection"){
+        Route::post('/statuschanger', function (Request $request) {
+            if ($request->status == "productsection") {
                 $item = ProductSection::findOrfail($request->id);
-                if($item->status == 1){
+                if ($item->status == 1) {
                     $item->status = 0;
-                }else{
+                } else {
                     $item->status = 1;
                 }
                 $item->save();
                 return ['status' => true];
-
             }
-            if($request->status == "productcategory"){
+            if ($request->status == "productcategory") {
                 $item = ProductCategory::findOrfail($request->id);
-                if($item->status == 1){
+                if ($item->status == 1) {
                     $item->status = 0;
-                }else{
+                } else {
                     $item->status = 1;
                 }
                 $item->save();
                 return ['status' => true];
             }
-            if($request->status == "productsubcategory"){
+            if ($request->status == "productsubcategory") {
                 $item = ProductSubCategory::findOrfail($request->id);
-                if($item->status == 1){
+                if ($item->status == 1) {
                     $item->status = 0;
-                }else{
+                } else {
                     $item->status = 1;
                 }
                 $item->save();
                 return ['status' => true];
             }
-            if($request->status == "product"){
+            if ($request->status == "product") {
                 $item = Product::findOrfail($request->id);
-                if($item->status == 1){
+                if ($item->status == 1) {
                     $item->status = 0;
-                }else{
+                } else {
                     $item->status = 1;
                 }
                 $item->save();
@@ -90,10 +93,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
 
-        Route::get('/logout', function(){
+        Route::get('/logout', function () {
             Auth::guard('admin')->logout();
             return redirect()->route('admin.login');
-
         })->name('logout');
 
         Route::get('/home', function () {
@@ -111,7 +113,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/profile/update', [AdminController::class, 'profileview'])->name('profile.update');
         Route::put('/profile/update', [AdminController::class, 'profileupdater'])->name('profile.updater');
 
-// Product Catelogues
+        // Product Catelogues
         Route::resource('/productsections', ProductSectionController::class);
         Route::resource('/productcategory', ProductCategoryController::class);
         Route::resource('/productsubcategory', ProductSubCategoryController::class);
@@ -122,5 +124,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('product/{product}/p_attribute', ProductsAttributeController::class);
         Route::resource('product/{product}/p_image', ProductImageController::class);
     });
-
 });
