@@ -72,7 +72,7 @@
                 <label for="brand">Select Brand</label><br>
                 <select  class="col-md-11 form-control selecttion" name="brands_id" id="brand">
                     <option selected value="">Select Brand</option>
-                    <option value="{{ Crypt::encryptString(0) }}">None</option>
+                    <option value="{{ Crypt::encryptString(0) }}" {{ $data->brands_id == 0? 'selected':'' }}>None</option>
                     @foreach ($brands as $brand)
                         <option
                         @if ($data->brands_id == $brand->id)
@@ -290,7 +290,7 @@
                 @enderror
             </div>
 <div></div>
-            <input style="grid-" type="submit" value="Add" class="btn btn-primary  col-md-11">
+            <input style="grid-" type="submit" value="Update" class="btn btn-primary  col-md-11">
         </div>
         </form>
     </div>

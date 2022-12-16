@@ -29,7 +29,7 @@ return new class extends Migration
             $table->tinyInteger('featured')->default(0);
             $table->string('video');
             $table->string('image');
-            $table->string('description');
+            $table->text('description');
             $table->string('wash_care');
             $table->string('fabric');
             $table->string('pattern');
@@ -38,7 +38,7 @@ return new class extends Migration
             $table->string('occassion');
             $table->string('meta_title');
             $table->string('meta_keywords');
-            $table->string('meta_description');
+            $table->text('meta_description');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

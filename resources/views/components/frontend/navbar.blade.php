@@ -26,10 +26,10 @@ $navsections = ProductSection::all();
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="{{ route('frontend.home') }}">Stack Developers</a>
+                    <a class="brand" href="{{ route('frontend.index') }}">Stack Developers</a>
                     <div class="nav-collapse">
                       <ul class="nav">
-                        <li class="active"><a href="{{ route('frontend.home') }}">Home</a>
+                        <li class="active"><a href="{{ route('frontend.index') }}">Home</a>
                         </li>
 
                         @foreach ($navsections as $section)

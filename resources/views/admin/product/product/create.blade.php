@@ -41,7 +41,7 @@
                     <option selected value="">Select Sub Category</option>
                     <option selected value="{{ Crypt::encryptString(0) }}">None</option>
                 </select>
-                @error('product_categories_id')
+                @error('product_sub_categories_id')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -54,7 +54,7 @@
                         <option value="{{ Crypt::encryptString($brand->id) }}">{{ $brand->title }}</option>
                     @endforeach
                 </select>
-                @error('product_categories_id')
+                @error('brand')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -129,7 +129,7 @@
                     <option selected value="0">No</option>
                     <option value="1">Yes</option>
                 </select>
-                @error('product_categories_id')
+                @error('featured')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -153,7 +153,7 @@
             <div class="">
                 <label for="description">Product Description</label>
                 <textarea class="form-control col-md-11" name="description" id="description">{{ old('description') }}</textarea>
-                @error('discount')
+                @error('description')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>

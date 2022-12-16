@@ -46,11 +46,11 @@
             @csrf
             @method('post')
             <input type="file" name="images[]" multiple accept="image/*" >
-          <input type="submit" value="Upload" class="btn btn-primary">  
-        </form>    
+          <input type="submit" value="Upload" class="btn btn-primary">
+        </form>
     </div>
 </div>
-            
+
 
 <div class="card">
     <div class="card-header bg-primary">

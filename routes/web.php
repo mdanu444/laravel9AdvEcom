@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
+use App\Http\Controllers\Frontend\Index;
 use App\Http\Controllers\ProductCategoryController;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
@@ -30,10 +31,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('frontend.')->group(function () {
-    Route::get('/', function () {
-        Session::put('pagetitle', 'home');
-        return view('frontend.welcome');
-    })->name('home');
+    Route::resource('/', Index::class);
 });
 
 
