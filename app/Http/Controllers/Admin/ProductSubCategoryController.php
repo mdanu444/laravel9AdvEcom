@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Crypt;
 use Image;
+
 class ProductSubCategoryController extends Controller
 {
     /**
@@ -22,7 +23,7 @@ class ProductSubCategoryController extends Controller
 
         Session::put('pageTitle', 'Product Category');
         $data = ProductSubCategory::all();
-        return view('admin.category.subcategory.index', ['data' => $data] );
+        return view('admin.category.subcategory.index', ['data' => $data]);
     }
 
     /**
@@ -35,7 +36,7 @@ class ProductSubCategoryController extends Controller
         Session::put('pageTitle', 'Product Category');
         $sections = ProductSection::all();
         $category = ProductCategory::all();
-        return view('admin.category.subcategory.create', ['sections'=> $sections, 'category' => $category]);
+        return view('admin.category.subcategory.create', ['sections' => $sections, 'category' => $category]);
     }
 
     /**
@@ -58,10 +59,10 @@ class ProductSubCategoryController extends Controller
         $productSubCategory = new ProductSubCategory;
 
         $image_tmp = $request->file('image');
-        if($image_tmp->isValid()){
+        if ($image_tmp->isValid()) {
             $image_extention = $image_tmp->getClientOriginalExtension();
-            $image_name = rand(111,999999).".".$image_extention;
-            $image_path = 'images/subcategory_image/'.$image_name;
+            $image_name = rand(111, 999999) . "." . $image_extention;
+            $image_path = 'images/subcategory_image/' . $image_name;
             $productSubCategory->image = $image_path;
             // return ($image_path);
             Image::make($image_tmp)->save($image_path);
@@ -105,7 +106,7 @@ class ProductSubCategoryController extends Controller
         $data = ProductSubCategory::findOrFail($did);
         $section = ProductSection::all();
         $category = ProductCategory::where('product_sections_id', $data->product_sections_id)->get();
-        return view('admin.category.subcategory.edit', ['item'=> $data, 'sections' => $section, 'category' => $category]);
+        return view('admin.category.subcategory.edit', ['item' => $data, 'sections' => $section, 'category' => $category]);
     }
 
     /**
@@ -119,7 +120,7 @@ class ProductSubCategoryController extends Controller
     {
         $did = Crypt::decryptString($id);
         $ProductSubCategory = ProductSubCategory::findOrfail($did);
-        if(!$request->hasFile('image')){
+        if (!$request->hasFile('image')) {
             $ProductSubCategory->title = $request->title;
             $ProductSubCategory->discount = $request->discount;
             $ProductSubCategory->description = $request->description;
@@ -131,13 +132,13 @@ class ProductSubCategoryController extends Controller
             $ProductSubCategory->product_categories_id = Crypt::decryptString($request->product_categories_id);
             $ProductSubCategory->save();
         }
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             unlink($ProductSubCategory->image);
             $image_tmp = $request->file('image');
-            if($image_tmp->isValid()){
+            if ($image_tmp->isValid()) {
                 $image_extention = $image_tmp->getClientOriginalExtension();
-                $image_name = rand(111,999999).".".$image_extention;
-                $image_path = 'images/subcategory_image/'.$image_name;
+                $image_name = rand(111, 999999) . "." . $image_extention;
+                $image_path = 'images/subcategory_image/' . $image_name;
                 $ProductSubCategory->image = $image_path;
                 // return ($image_path);
                 Image::make($image_tmp)->save($image_path);
@@ -172,7 +173,8 @@ class ProductSubCategoryController extends Controller
         return redirect()->route('admin.productsubcategory.index')->with('message', "Sub Category Deleted Successfull!");
     }
 
-    function getcategorybysection(Request $request){
+    function getcategorybysection(Request $request)
+    {
         $id = Crypt::decryptString($request->id);
         $categories = ProductCategory::where('product_sections_id', $id)->get();
         $html = view('admin.category.subcategory.categories', ['categories' => $categories])->render();

@@ -12,14 +12,17 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
 
 					<li class="subMenu"><a>{{ $section->title}}</a>
 						<ul>
-        @foreach ($section->product_categories as $category)
+            @foreach ($section->product_categories as $category)
+    @if (count($category->product_sub_categories)>0)
 
-							<li><a href="products.html"><strong>{{  $category->title  }}</strong></a></li>
+							<li><a href="{{ url('c/'.$category->url)}}"><strong>{{  $category->title  }}</strong></a></li>
             @foreach ($category->product_sub_categories as $sub)
-                    <li><a href="products.html"><i class="icon-chevron-right"></i>{{  $sub->title }}</></a></li>
+                @if (count($sub->products)>0)
+                    <li><a href="{{ url('s/'.$sub->url)}}"><i class="icon-chevron-right"></i>{{  $sub->title }}</></a></li>
+                @endif
             @endforeach
+    @endif					</ul>
         @endforeach
-						</ul>
 					</li>
     @endif
 @endforeach

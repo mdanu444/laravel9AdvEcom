@@ -39,16 +39,20 @@ $navsections = ProductSection::all();
                             <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ $section->title }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                @foreach ($section->product_categories as $category)
+                    @foreach ($section->product_categories as $category)
+                    @if(count($category->product_sub_categories) > 0)
                                 <li class="divider"></li>
-                                <li class="nav-header"><a href="#">{{ $category->title }}</a></li>
-                                    @foreach($section->product_sub_categories as $sub_cat)
+                                <li class="nav-header"><a href="{{ url('c/'.$category->url) }}"><strong>{{ $category->title }}</strong></a></li>
+                                @foreach($section->product_sub_categories as $sub_cat)
                                     @if ($sub_cat->product_categories_id == $category->id)
-                                    <li><a href="#">{{ $sub_cat->title}}</a></li>
+                                    @if (count($sub_cat->products) > 0)
+                                    <li><a href="{{ url('s/'.$sub_cat->url) }}">> {{ $sub_cat->title}}</a></li>
                                     @endif
-                                    @endforeach
-                                <li class="divider"></li>
+                                    @endif
                                 @endforeach
+                                <li class="divider"></li>
+                    @endif
+                    @endforeach
                             </ul>
                           </li>
                           @endif

@@ -105,6 +105,12 @@
                 <p>Product Brand</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{route('admin.banner.index')}}" class="nav-link   activable" activable="banner" onclick="linkactiver(event)">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Banners</p>
+              </a>
+            </li>
           </ul>
           <li class="nav-item {{Session::get('pageTitle') == 'Product' ? 'menu-open ':''}}">
             <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product' ? 'active ':''}}">

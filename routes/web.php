@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandsController;
 use App\Http\Controllers\Admin\ProductsAttributeController;
 use App\Http\Controllers\Admin\ProductController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Frontend\Index;
 use App\Http\Controllers\ProductCategoryController;
+use App\Models\Admin\Banner;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductSection;
@@ -31,7 +33,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('frontend.')->group(function () {
-    Route::resource('/', Index::class);
+    Route::get('/', [Index::class, 'index'])->name('index');
+    Route::get('c/{cat_link}', [Index::class, 'category'])->name('category');
+    Route::get('s/{sub_link}', [Index::class, 'subcat'])->name('subcat');
 });
 
 
@@ -88,6 +92,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 $item->save();
                 return ['status' => true];
             }
+            if ($request->status == "banner") {
+                $item = Banner::findOrfail($request->id);
+                if ($item->status == 1) {
+                    $item->status = 0;
+                } else {
+                    $item->status = 1;
+                }
+                $item->save();
+                return ['status' => true];
+            }
         });
 
 
@@ -121,5 +135,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/getsubcategorybysection', [ProductController::class, 'getsubcategorybysection'])->name('getsubcategorybysection');
         Route::resource('product/{product}/p_attribute', ProductsAttributeController::class);
         Route::resource('product/{product}/p_image', ProductImageController::class);
+        Route::resource('banner', BannerController::class);
     });
 });

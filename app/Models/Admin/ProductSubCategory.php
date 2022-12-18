@@ -31,11 +31,11 @@ class ProductSubCategory extends Model
 
     public function product_categories()
     {
-        return $this->belongsTo(ProductCategory::class);
+        return $this->belongsTo(ProductCategory::class, 'product_categories_id', 'id');
     }
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'product_sub_categories_id');
     }
 }
