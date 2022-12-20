@@ -22,6 +22,7 @@ class ProductSubCategoryController extends Controller
     {
 
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Sub Category');
         $data = ProductSubCategory::all();
         return view('admin.category.subcategory.index', ['data' => $data]);
     }
@@ -34,6 +35,7 @@ class ProductSubCategoryController extends Controller
     public function create()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Sub Category');
         $sections = ProductSection::all();
         $category = ProductCategory::all();
         return view('admin.category.subcategory.create', ['sections' => $sections, 'category' => $category]);
@@ -103,6 +105,7 @@ class ProductSubCategoryController extends Controller
     {
         $did = Crypt::decryptString($id);
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Sub Category');
         $data = ProductSubCategory::findOrFail($did);
         $section = ProductSection::all();
         $category = ProductCategory::where('product_sections_id', $data->product_sections_id)->get();

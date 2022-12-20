@@ -34,12 +34,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('frontend.')->group(function () {
     Route::get('/', [Index::class, 'index'])->name('index');
-    Route::get('c/{cat_link}', [Index::class, 'category'])->name('category');
-    Route::get('s/{sub_link}', [Index::class, 'subcat'])->name('subcat');
+    Route::match(['get', 'post'], 'c/{cat_link}', [Index::class, 'category'])->name('category');
+    Route::match(['get', 'post'], 's/{sub_link}', [Index::class, 'subcat'])->name('subcat');
 });
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('frontend.index');
+    });
     Route::middleware(['guest:admin', 'PreventBackHistory'])->group(function () {
         Route::view('/login', 'admin.login')->name('login');
         Route::post('/login', [AdminController::class, 'check'])->name('check');
@@ -50,7 +53,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
     Route::middleware(['auth:admin', 'PreventBackHistory'])->group(function () {
-
         Route::post('/statuschanger', function (Request $request) {
             if ($request->status == "productsection") {
                 $item = ProductSection::findOrfail($request->id);
@@ -112,11 +114,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/home', function () {
             Session::put('pageTitle', 'Home');
+            Session::put('activer', 'home');
             return view('admin.home');
         })->name('home');
 
         Route::get('/profile/password', function () {
             Session::put('pageTitle', 'Profile');
+            Session::put('activer', 'Change Password');
             return view('admin.profile.profile-changePassword');
         })->name('profile.changePassword');
 
@@ -131,10 +135,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('/productsubcategory', ProductSubCategoryController::class);
         Route::post('/getcategorybysection', [ProductSubCategoryController::class, 'getcategorybysection'])->name('getcategorybysection');
         Route::resource('productbrands', BrandsController::class);
+        Route::resource('banner', BannerController::class);
         Route::resource('product', ProductController::class);
         Route::post('/getsubcategorybysection', [ProductController::class, 'getsubcategorybysection'])->name('getsubcategorybysection');
         Route::resource('product/{product}/p_attribute', ProductsAttributeController::class);
         Route::resource('product/{product}/p_image', ProductImageController::class);
-        Route::resource('banner', BannerController::class);
     });
 });

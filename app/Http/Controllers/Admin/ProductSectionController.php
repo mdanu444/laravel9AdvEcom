@@ -18,8 +18,9 @@ class ProductSectionController extends Controller
     public function index()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Section');
         $data = ProductSection::all();
-        return view('admin.category.section.index', ['data' => $data] );
+        return view('admin.category.section.index', ['data' => $data]);
     }
 
     /**
@@ -30,6 +31,7 @@ class ProductSectionController extends Controller
     public function create()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Section');
         return view('admin.category.section.create');
     }
 
@@ -56,7 +58,6 @@ class ProductSectionController extends Controller
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -69,8 +70,9 @@ class ProductSectionController extends Controller
     {
         $did = Crypt::decryptString($id);
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Section');
         $data = ProductSection::findOrFail($did);
-        return view('admin.category.section.edit', ['item'=> $data]);
+        return view('admin.category.section.edit', ['item' => $data]);
     }
 
     /**

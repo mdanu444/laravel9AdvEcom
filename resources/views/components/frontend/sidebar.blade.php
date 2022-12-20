@@ -1,11 +1,20 @@
 @php
 use App\Models\Admin\ProductSection;
+use App\Models\Admin\Product;
 $navsections = ProductSection::orderBy('id', 'desc')->get();
+
+    // filters
+    $filter = [];
+    $filter['pattern'] = Product::select('pattern')->distinct()->get();
+    $filter['fabric'] = Product::select('fabric')->distinct()->get();
+    $filter['sleeve'] = Product::select('sleeve')->distinct()->get();
+    $filter['occassion'] = Product::select('occassion')->distinct()->get();
+
 @endphp
 <!-- Sidebar ================================================== -->
 			<div id="sidebar" class="span3">
-				<div class="well well-small"><a id="myCart" href="product_summary.html"><img src={{ asset("frontend/themes/images/ico-cart.png")}} alt="cart">3 Items in your cart</a></div>
-				<ul id="sideManu" class="nav nav-tabs nav-stacked">
+             <div class="well well-small"><a id="myCart" href="product_summary.html"><img src={{ asset("frontend/themes/images/ico-cart.png")}} alt="cart">3 Items in your cart</a></div>
+        <ul id="sideManu" class="nav nav-tabs nav-stacked">
 @foreach ($navsections as $section)
     @if (count($section->product_categories) > 0)
 
@@ -26,7 +35,30 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
 					</li>
     @endif
 @endforeach
-				</ul>
+        </ul>
+
+@if (Session::has('pagetitle') && Session::get('pagetitle') == 'listing')
+<br><br>
+<h5>Filters</h5>
+<ul id="sideManu" class="nav nav-tabs nav-stacked">
+    @foreach ($filter  as $key => $flt)
+    <li class="subMenu"><a>{{ $key }}</a>
+        <ul>
+            @foreach ($flt as $f)
+            <li>
+                <label >
+                    <input type="checkbox" style="padding-bottom: 10px; margin-bottom: 5px !important" class="{{ $key }}"  value="{{ $f[$key] }}"> {{ $f[$key] }}
+                </label>
+
+            </li>
+            @endforeach
+        </ul>
+        <br>
+    </li>
+    @endforeach
+</ul>
+@endif
+
 				<br/>
 				<div class="thumbnail">
 					<img src={{ asset("frontend/themes/images/payment_methods.png")}} title="Payment Methods" alt="Payments Methods">
@@ -36,3 +68,32 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
 				</div>
 			</div>
 			<!-- Sidebar end=============================================== -->
+<script>
+let filter = [];
+@foreach($filter  as $key => $flt)
+let {{ $key }} = document.querySelectorAll(".{{ $key }}");
+for(let li of {{ $key }}){
+    li.addEventListener('click', () => {
+        sendfilterclasses();
+    });
+}
+@endforeach
+
+function sendfilterclasses(){
+    @foreach($filter  as $key => $flt)
+        getCheckedFilters("{{ $key }}")
+        @endforeach
+        loadData()
+}
+
+function getCheckedFilters(classname){
+    if(classname != ""){
+        let selectedFilter = [];
+        let allCheckedInput = document.querySelectorAll('.'+classname+':checked');
+        for(let input of allCheckedInput){
+            selectedFilter.push(input.value);
+        }
+        filter[classname] = selectedFilter;
+    }
+}
+</script>

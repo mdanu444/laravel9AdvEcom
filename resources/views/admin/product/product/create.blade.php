@@ -168,7 +168,17 @@
 
             <div class="">
                 <label for="fabric">Fabric [Cotton/Polister/etc.]</label>
-                <input value="{{ old('fabric') }}" class="form-control col-md-11" type="text" name="fabric" id="fabric">
+
+                <select  class="col-md-11 form-control selecttion" name="fabric" id="fabric">
+                    <option selected value="Cotton">Cotton</option>
+                    <option value="Polyster">Polyster</option>
+                    <option value="Linen">Linen</option>
+                    <option value="Wool">Wool</option>
+                    <option value="Silk">Silk</option>
+                    <option value="Leather">Leather</option>
+                    <option value="Mixed fabrics">Mixed fabrics</option>
+                    <option value="None">None</option>
+                </select>
                 @error('fabric')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -179,12 +189,12 @@
             <div class="form-group">
                 <label for="pattern">Select Pattern</label><br>
                 <select  class="col-md-11 form-control selecttion" name="pattern" id="pattern">
-                    <option selected value="Checked">Checked</option>
+                    <option  value="Checked">Checked</option>
                     <option value="Plain">Plain</option>
                     <option value="Printed">Printed</option>
                     <option value="Self">Self</option>
                     <option value="Solid">Solid</option>
-                    <option value="0">None</option>
+                    <option selected value="None">None</option>
                 </select>
                 @error('pattern')
                     <span class="text-danger">{{ $message }}</span>
@@ -198,7 +208,7 @@
                     <option value="Half Sleeve">Half Sleeve</option>
                     <option value="Short Sleeve">Short Sleeve</option>
                     <option value="Sleeveless">Sleeveless</option>
-                    <option value="0">None</option>
+                    <option value="None">None</option>
                 </select>
                 @error('pattern')
                     <span class="text-danger">{{ $message }}</span>

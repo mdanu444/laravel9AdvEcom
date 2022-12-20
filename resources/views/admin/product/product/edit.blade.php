@@ -166,7 +166,11 @@
                 @enderror
             </div>
             <div>
+                @if (file_exists(url('video/product_video/'.$data->video)))
                 <a href="{{ url('video/product_video/'.$data->video) }}" download >Download Video</a>
+                @else
+                No Video Available
+                @endif
             </div>
             <div>
                 <img height="100" width="100" src="{{ url('images/product_image/small/'.$data->image) }}" alt="">
@@ -205,7 +209,16 @@
 
             <div class="">
                 <label for="fabric">Fabric [Cotton/Polister/etc.]</label>
-                <input value="{{ $data->fabric }}" class="form-control col-md-11" type="text" name="fabric" id="fabric">
+                <select  class="col-md-11 form-control selecttion" name="fabric" id="fabric">
+                    <option  {{  $data->fabric == 'cotton'?'selected':''}} value="Cotton">Cotton</option>
+                    <option {{  $data->fabric == 'Polyster'?'selected':''}} value="Polyster">Polyster</option>
+                    <option {{  $data->fabric == 'Linen'?'selected':''}} value="Linen">Linen</option>
+                    <option {{  $data->fabric == 'Wool'?'selected':''}} value="Wool">Wool</option>
+                    <option {{  $data->fabric == 'Silk'?'selected':''}} value="Silk">Silk</option>
+                    <option {{  $data->fabric == 'Leather'?'selected':''}} value="Leather">Leather</option>
+                    <option {{  $data->fabric == 'Mixed fabrics'?'selected':''}} value="Mixed fabrics">Mixed fabrics</option>
+                    <option {{  $data->fabric == 'None'?'selected':''}} value="None">None</option>
+                </select>
                 @error('fabric')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
@@ -221,7 +234,7 @@
                     <option {{ $data->pattern == "Printed"? 'selected':'' }} value="Printed">Printed</option>
                     <option {{ $data->pattern == "Self"? 'selected':'' }} value="Self">Self</option>
                     <option {{ $data->pattern == "Solid"? 'selected':'' }} value="Solid">Solid</option>
-                    <option {{ $data->pattern == 0? 'selected':'' }} value="0">None</option>
+                    <option {{ $data->pattern == 'None'? 'selected':'' }} value="None">None</option>
                 </select>
                 @error('pattern')
                     <span class="text-danger">{{ $message }}</span>
@@ -235,7 +248,8 @@
                     <option  {{ $data->sleeve == "Half Sleeve"?'selected':'' }} value="Half Sleeve">Half Sleeve</option>
                     <option  {{ $data->sleeve == "Short Sleeve"?'selected':'' }} value="Short Sleeve">Short Sleeve</option>
                     <option  {{ $data->sleeve == "Sleeveless"?'selected':'' }} value="Sleeveless">Sleeveless</option>
-                    <option  {{ $data->sleeve == 0?'selected':'' }} value="0">None</option>
+                    <option  {{ $data->sleeve == "Sleeveless"?'selected':'' }} value="Sleeveless">Sleeveless</option>
+                    <option  {{ $data->sleeve == 'None'? 'selected':'' }} value="None">None</option>
                 </select>
                 @error('sleeve')
                     <span class="text-danger">{{ $message }}</span>

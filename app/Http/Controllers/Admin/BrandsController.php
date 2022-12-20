@@ -18,8 +18,9 @@ class BrandsController extends Controller
     public function index()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Brand');
         $data = Brand::all();
-        return view('admin.category.brand.index', ['data' => $data] );
+        return view('admin.category.brand.index', ['data' => $data]);
     }
 
     /**
@@ -30,6 +31,7 @@ class BrandsController extends Controller
     public function create()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Brand');
         return view('admin.category.brand.create');
     }
 
@@ -56,7 +58,6 @@ class BrandsController extends Controller
      */
     public function show($id)
     {
-
     }
 
     /**
@@ -69,8 +70,9 @@ class BrandsController extends Controller
     {
         $did = Crypt::decryptString($id);
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Brand');
         $data = Brand::findOrFail($did);
-        return view('admin.category.brand.edit', ['item'=> $data]);
+        return view('admin.category.brand.edit', ['item' => $data]);
     }
 
     /**

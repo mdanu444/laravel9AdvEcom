@@ -21,8 +21,9 @@ class ProductCategoryController extends Controller
     {
 
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Category');
         $data = ProductCategory::all();
-        return view('admin.category.category.index', ['data' => $data] );
+        return view('admin.category.category.index', ['data' => $data]);
     }
 
     /**
@@ -33,8 +34,9 @@ class ProductCategoryController extends Controller
     public function create()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Category');
         $sections = ProductSection::all();
-        return view('admin.category.category.create', ['sections'=> $sections]);
+        return view('admin.category.category.create', ['sections' => $sections]);
     }
 
     /**
@@ -58,10 +60,10 @@ class ProductCategoryController extends Controller
         $productCategory = new ProductCategory;
 
         $image_tmp = $request->file('image');
-        if($image_tmp->isValid()){
+        if ($image_tmp->isValid()) {
             $image_extention = $image_tmp->getClientOriginalExtension();
-            $image_name = rand(111,999999).".".$image_extention;
-            $image_path = 'images/category_image/'.$image_name;
+            $image_name = rand(111, 999999) . "." . $image_extention;
+            $image_path = 'images/category_image/' . $image_name;
             $productCategory->image = $image_path;
             // return ($image_path);
             Image::make($image_tmp)->save($image_path);
@@ -101,9 +103,10 @@ class ProductCategoryController extends Controller
     {
         $did = Crypt::decryptString($id);
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Category');
         $data = ProductCategory::findOrFail($did);
         $section = ProductSection::all();
-        return view('admin.category.category.edit', ['item'=> $data, 'sections' => $section]);
+        return view('admin.category.category.edit', ['item' => $data, 'sections' => $section]);
     }
 
     /**
@@ -117,7 +120,7 @@ class ProductCategoryController extends Controller
     {
         $did = Crypt::decryptString($id);
         $ProductCategory = ProductCategory::findOrfail($did);
-        if(!$request->hasFile('image')){
+        if (!$request->hasFile('image')) {
             // dd($request->all());
             $ProductCategory->title = $request->title;
             $ProductCategory->discount = $request->discount;
@@ -129,13 +132,13 @@ class ProductCategoryController extends Controller
             $ProductCategory->product_sections_id = $request->product_sections_id;
             $ProductCategory->save();
         }
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             unlink($ProductCategory->image);
             $image_tmp = $request->file('image');
-            if($image_tmp->isValid()){
+            if ($image_tmp->isValid()) {
                 $image_extention = $image_tmp->getClientOriginalExtension();
-                $image_name = rand(111,999999).".".$image_extention;
-                $image_path = 'images/category_image/'.$image_name;
+                $image_name = rand(111, 999999) . "." . $image_extention;
+                $image_path = 'images/category_image/' . $image_name;
                 $ProductCategory->image = $image_path;
                 // return ($image_path);
                 Image::make($image_tmp)->save($image_path);

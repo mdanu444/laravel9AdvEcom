@@ -3,8 +3,21 @@ use App\Models\Admin\ProductSection;
 $navsections = ProductSection::all();
 @endphp
 
+<script>
+    function loading(){
+        let loading = document.getElementById('loading');
+        if(loading.style.display != 'none'){
+            loading.style.display = 'none'
+        }else{
+            loading.style.display = 'block'
+        }
+    }
+</script>
 
-<body>
+<body style="position: relative;">
+    <div id="loading"  style="display: none;position: absolute; height: 100vh; width: 100vw;  top: 0; left: 0; z-index:1;">
+        <img style="position: absolute; top: 50%; left: 50%;" src="{{  asset('images/loading.gif')}}" alt="">
+    </div>
     <div id="header">
 
         <div class="container">

@@ -19,6 +19,7 @@ class BannerController extends Controller
     public function index()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Banner');
         $data = Banner::all();
         return view('admin.category.banner.index', ['data' => $data]);
     }
@@ -31,6 +32,7 @@ class BannerController extends Controller
     public function create()
     {
         Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Banner');
         return view('admin.category.banner.create');
     }
 
@@ -80,7 +82,8 @@ class BannerController extends Controller
     public function edit($id)
     {
         $did = Crypt::decryptString($id);
-        Session::put('pageTitle', 'Product Category ');
+        Session::put('pageTitle', 'Product Category');
+        Session::put('activer', 'Product Banner');
         $data = Banner::findOrFail($did);
         return view('admin.category.banner.edit', ['item' => $data]);
     }

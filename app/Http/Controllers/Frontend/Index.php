@@ -14,45 +14,84 @@ class Index extends Controller
     public function index()
     {
         Session::put('pagetitle', 'home');
+
         $numberofproduct = count(Product::all());
         $featured_products = Product::where('featured', 1)->where('status', 1)->get()->toArray();
         $featured_products = array_chunk($featured_products, 4);
         $collection = Product::where('status', 1)->orderBy('id', 'DESC')->limit(6)->get();
         return view('frontend.welcome', ['featured_products' => $featured_products, 'numberofproduct' => $numberofproduct, 'collection' => $collection,]);
     }
-    public function category($cat_link)
+    public function category(Request $request, $cat_link)
     {
+
+        Session::put('pagetitle', 'listing');
         $category = ProductCategory::where('url', $cat_link)->first();
-        Session::put('pagetitle', $category->title);
+        $subcategoryProducts = Product::where(['product_categories_id' => $category->id, 'status' => 1]);
 
 
 
-        $categoryProducts = Product::where(['product_categories_id' => $category->id, 'status' => 1])->paginate(3);
-
-        if (isset($_GET['sort']) && $_GET['sort'] == 'by-heighest-price') {
-            $categoryProducts = Product::where(['product_categories_id' => $category->id, 'status' => 1])->orderBy('price', 'desc')->paginate(3);
+        if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($request->sort) && $request->sort != "") {
+            $filters = $request->filter;
+            $filters = json_decode($filters);
+            foreach ($filters as $key => $filter) {
+                if (count($filter) > 0) {
+                    $subcategoryProducts = $subcategoryProducts->whereIn($key, $filter);
+                }
+            }
+            if ($request->sort == 'by-heighest-price') {
+                $subcategoryProducts = $subcategoryProducts->orderBy('price', 'desc');
+            }
+            if ($request->sort == 'by-lowest-price') {
+                $subcategoryProducts = $subcategoryProducts->orderBy('price', 'asc');
+            }
+            if ($request->sort == 'latest') {
+                $subcategoryProducts = $subcategoryProducts->orderBy('id', 'desc');
+            }
+            $subcategoryProducts = $subcategoryProducts->paginate(30);
+            $html = view('frontend.ajax_listing')->with('products', $subcategoryProducts)->render();
+            return response()->json(array('html' => $html));
         }
-        if (isset($_GET['sort']) && $_GET['sort'] == 'by-lowest-price') {
-            $categoryProducts = Product::where(['product_categories_id' => $category->id, 'status' => 1])->orderBy('price', 'asc')->paginate(3);
-        }
-        if (isset($_GET['sort']) && $_GET['sort'] == 'latest') {
-            $categoryProducts = Product::where(['product_categories_id' => $category->id, 'status' => 1])->orderBy('id', 'desc')->paginate(3);
-        }
 
 
 
 
 
+        $subcategoryProducts = $subcategoryProducts->paginate(30);
         $numberofproducts = count(Product::where(['product_categories_id' => $category->id, 'status' => 1])->get());
-        return view('frontend.listing', ['category' => $category, 'products' => $categoryProducts, 'numberofproducts' => $numberofproducts]);
+        return view('frontend.listing', ['category' => $category, 'products' => $subcategoryProducts, 'numberofproducts' => $numberofproducts, 'url' => url('c/' . $cat_link)]);
     }
-    public function subcat($sub_link)
+    public function subcat(Request $request, $sub_link)
     {
+
+        Session::put('pagetitle', 'listing');
+
+
         $subcategory = ProductSubCategory::where(['url' => $sub_link, 'status' => 1])->first();
+
+        $subcategoryProducts = Product::where(['product_sub_categories_id' => $subcategory->id, 'status' => 1]);
+
+        if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($request->sort) && $request->sort != "") {
+            if ($request->sort == 'by-heighest-price') {
+                $subcategoryProducts = $subcategoryProducts->orderBy('price', 'desc');
+            } elseif ($request->sort == 'by-lowest-price') {
+                $subcategoryProducts = $subcategoryProducts->orderBy('price', 'asc');
+            } elseif ($request->sort == 'latest') {
+                $subcategoryProducts = $subcategoryProducts->orderBy('id', 'desc');
+            }
+
+            $subcategoryProducts = $subcategoryProducts->paginate(30);
+            $html = view('frontend.ajax_listing')->with('products', $subcategoryProducts)->render();
+            return response()->json(array('html' => $html));
+        }
+
+
+
         Session::put('pagetitle', $subcategory->title);
         $category = $subcategory->product_categories;
-        $subcategoryProducts = Product::where(['product_sub_categories_id' => $subcategory->id, 'status' => 1])->paginate(3);
+
+        $subcategoryProducts = $subcategoryProducts->paginate(30);
         $numberofproducts = count(Product::where(['product_sub_categories_id' => $subcategory->id, 'status' => 1])->get());
-        return view('frontend.listing', ['category' => $category, 'subcategory' => $subcategory, 'products' => $subcategoryProducts, 'numberofproducts' => $numberofproducts]);
+
+        return view('frontend.listing', ['category' => $category, 'subcategory' => $subcategory, 'products' => $subcategoryProducts, 'numberofproducts' => $numberofproducts, 'url' => url('s/' . $sub_link)]);
     }
 }
