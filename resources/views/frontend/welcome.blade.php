@@ -16,10 +16,10 @@
 										<li class="span3">
 											<div class="thumbnail">
 												<i class="tag"></i>
-												<a href="product_details.html"><img src={{ asset("images/product_image/small/".$featured['image'])}} alt=""></a>
+												<a href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}"><img src={{ asset("images/product_image/small/".$featured['image'])}} alt=""></a>
 												<div class="caption">
 													<h5>{{ Str::words($featured['title'],5) }}</h5>
-													<h4><a class="btn" href="product_details.html">VIEW</a> <span class="pull-right">Rs.{{ $featured['price'] }}</span></h4>
+													<h4><a class="btn" href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}">VIEW</a> <span class="pull-right">Rs.{{ $featured['price'] }}</span></h4>
 												</div>
 											</div>
 										</li>
@@ -41,14 +41,14 @@
                     @foreach ($collection as $item)
 					<li class="span3">
 						<div class="thumbnail">
-							<a  href="product_details.html"><img src={{ asset("images/product_image/small/".$item->image)}} alt=""/></a>
+							<a  href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}"><img src={{ asset("images/product_image/small/".$item->image)}} alt=""/></a>
 							<div class="caption">
 								<h5>{{ Str::words($item->title, 5)}}</h5>
 								<p>
 									{{ Str::words($item->description, 8)}}
 								</p>
 
-								<h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.{{ $item->price}}</a></h4>
+								<h4 style="text-align:center"><a class="btn" href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.{{ $item->price}}</a></h4>
 							</div>
 						</div>
 					</li>

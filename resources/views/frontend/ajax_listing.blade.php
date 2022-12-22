@@ -3,7 +3,9 @@
         @foreach ($products as $product)
         <li class="span3">
             <div class="thumbnail">
-                <a href="product_details.html"><img  src={{url("images/product_image/small/".$product->image)}} alt=""/></a>
+                <a href="{{ route('frontend.product_details', ['id' => $product->id]) }}"><img
+                    src={{url("images/product_image/small/".$product->image) }} alt=""/>
+                </a>
                 <div class="caption">
                     <h5>{{ Str::words($product->title, 4)}}</h5>
                     <p>

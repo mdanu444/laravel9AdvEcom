@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Frontend\Index;
+use App\Http\Controllers\Frontend\ProductDetails;
 use App\Http\Controllers\ProductCategoryController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Product;
@@ -36,6 +37,8 @@ Route::name('frontend.')->group(function () {
     Route::get('/', [Index::class, 'index'])->name('index');
     Route::match(['get', 'post'], 'c/{cat_link}', [Index::class, 'category'])->name('category');
     Route::match(['get', 'post'], 's/{sub_link}', [Index::class, 'subcat'])->name('subcat');
+    Route::get('/details/{id}', [ProductDetails::class, 'index'])->name('product_details');
+    Route::post('/getpricebysize', [ProductDetails::class, 'getpricebysize'])->name('getpricebysize');
 });
 
 
