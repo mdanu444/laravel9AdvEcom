@@ -1,3 +1,8 @@
+@php
+    use App\Models\Cart;
+@endphp
+
+
 <div class="tab-pane  active" id="blockView">
     <ul class="thumbnails">
         @foreach ($products as $product)
@@ -11,7 +16,23 @@
                     <p>
                         {{  Str::words($product->description, 11)}}
                     </p>
-                    <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.{{ $product->price}}</a></h4>
+                    <h4 style="text-align:center">
+
+                        <a class="btn" href="{{ route('frontend.product_details', ['id', $product->id]) }}"> <i class="icon-zoom-in"></i></a>
+
+
+                        @if (Cart::getdiscount($product->id) > 0)
+                        <a class="btn btn-primary" href="#">
+                            <del>Rs.{{ $product->price}}</del>
+                            Rs. {{ $product->price - ($product->price * (Cart::getdiscount($product->id)/100))}}
+
+                            </a>
+
+                        @else
+                        <a class="btn btn-primary" href="#">Rs.{{ $product->price}}</a>
+                        @endif
+
+                    </h4>
                 </div>
             </div>
         </li>
@@ -19,3 +40,13 @@
     </ul>
     <hr class="soft"/>
 </div>
+<a href="compair.html" class="btn btn-large pull-right">Compair Product</a>
+    <div class="pagination">
+        <ul>
+            @if (isset($_GET['sort']) && $_GET['sort'] != "")
+                {{ $products->appends(['sort'=>$_GET['sort']])->links() }}
+            @else
+            {{ $products->links() }}
+            @endif
+        </ul>
+    </div>

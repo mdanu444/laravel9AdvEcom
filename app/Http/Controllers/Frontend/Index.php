@@ -47,7 +47,7 @@ class Index extends Controller
             if ($request->sort == 'latest') {
                 $subcategoryProducts = $subcategoryProducts->orderBy('id', 'desc');
             }
-            $subcategoryProducts = $subcategoryProducts->paginate(30);
+            $subcategoryProducts = $subcategoryProducts->paginate(6);
             $html = view('frontend.ajax_listing')->with('products', $subcategoryProducts)->render();
             return response()->json(array('html' => $html));
         }
@@ -56,7 +56,7 @@ class Index extends Controller
 
 
 
-        $subcategoryProducts = $subcategoryProducts->paginate(30);
+        $subcategoryProducts = $subcategoryProducts->paginate(6);
         $numberofproducts = count(Product::where(['product_categories_id' => $category->id, 'status' => 1])->get());
         return view('frontend.listing', ['category' => $category, 'products' => $subcategoryProducts, 'numberofproducts' => $numberofproducts, 'url' => url('c/' . $cat_link)]);
     }
@@ -79,7 +79,7 @@ class Index extends Controller
                 $subcategoryProducts = $subcategoryProducts->orderBy('id', 'desc');
             }
 
-            $subcategoryProducts = $subcategoryProducts->paginate(30);
+            $subcategoryProducts = $subcategoryProducts->paginate(6);
             $html = view('frontend.ajax_listing')->with('products', $subcategoryProducts)->render();
             return response()->json(array('html' => $html));
         }
@@ -89,7 +89,7 @@ class Index extends Controller
         Session::put('pagetitle', $subcategory->title);
         $category = $subcategory->product_categories;
 
-        $subcategoryProducts = $subcategoryProducts->paginate(30);
+        $subcategoryProducts = $subcategoryProducts->paginate(6);
         $numberofproducts = count(Product::where(['product_sub_categories_id' => $subcategory->id, 'status' => 1])->get());
 
         return view('frontend.listing', ['category' => $category, 'subcategory' => $subcategory, 'products' => $subcategoryProducts, 'numberofproducts' => $numberofproducts, 'url' => url('s/' . $sub_link)]);

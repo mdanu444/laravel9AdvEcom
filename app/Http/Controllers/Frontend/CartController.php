@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers\Frontend;
+
+use App\Http\Controllers\Controller;
+use App\Models\Admin\ProductsAttribute;
+use App\Models\Cart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
+
+class CartController extends Controller
+{
+    public function index(){
+        $cartitems = Cart::getCartItems();
+        $numberOfCartItem = count($cartitems);
+        Session::put('numberOfCartItem', $numberOfCartItem);
+        return view('frontend.cart', ['cartitems'=>$cartitems]);
+    }
+    public function store(Request $request, $id){
+
+        $cartitems = Cart::getCartItems();
+        $numberOfCartItem = count($cartitems);
+        Session::put('numberOfCartItem', $numberOfCartItem);
+
+        if(empty($request->size) || empty($request->quantity)){
+            return back()->with('error_msg', "Size and Quantity Required !");
+        }
+        if($request->size < 1){
+            $request->size = 1;
+        }
+        $request->size = Crypt::decryptString($request->size);
+        // check that, product already added or not
+        $alreadyaddedproduct = Cart::where(['products_id'=> $id, 'attributes_id' => $request->size])->get();
+        if(count($alreadyaddedproduct) > 0){
+            return back()->with('error_msg', 'This product Already Added !');
+        }
+        // check that, product stock has or not
+        $productAttr = ProductsAttribute::where(["products_id" => $id, 'id' => $request->size])->first();
+        if($productAttr->stock < $request->quantity){
+            return back()->with('error_msg', 'Desire quantity is not available !');
+        }
+
+        // // check that, the attribute valid or not
+        // if(count($productAttr) < 1){
+        //     return back()->with('error_msg', "Invalid Size !");
+        // }
+
+        if(Auth::check()){
+            Session::forget('session_id');
+            $session_id = 0;
+            $user_id = Auth::id();
+        }else{
+            $user_id = 0;
+            if(Session::has('session_id')){
+                $session_id = Session::get('session_id');
+            }else{
+                Session::put('session_id',Session::getId());
+                $session_id = Session::get('session_id');
+            }
+        }
+        $cart = new Cart();
+        $cart->session_id = $session_id;
+        $cart->users_id = $user_id;
+        $cart->products_id = $id;
+        $cart->quantity = $request->quantity;
+        $cart->price = $productAttr->price;
+        $cart->attributes_id = $productAttr->id;
+        if($cart->save()){
+            return back()->with('success_msg', 'Added to cart Successfully !');
+        }
+        return back()->with('error_msg', 'Something Error, Plese try again letter!');
+    }
+}

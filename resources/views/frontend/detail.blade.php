@@ -1,3 +1,7 @@
+@php
+use App\Models\Cart;
+@endphp
+
 @extends('frontend.master')
 @section('mainbody')
 <div class="span9">
@@ -21,7 +25,7 @@
 
                 </div>
                 <!--
-                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
                 <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
                 -->
             </div>
@@ -38,6 +42,12 @@
             </div>
         </div>
         <div class="span6">
+            @if (Session::has('error_msg'))
+            <div class="alert alert-danger">{{ Session::get('error_msg') }}</div>
+            @endif
+            @if (Session::has('success_msg'))
+            <div class="alert alert-success">{{ Session::get('success_msg') }}</div>
+            @endif
             <h3>{{ $product->title }} </h3>
             <small>- {{ $product->brands_id != 0 ? $product->brands->title:"No Brand" }}</small>
             <hr class="soft"/>
@@ -50,22 +60,29 @@
                     @endphp
                     {{ $stock }}
                 items in stock</small>
-            <form class="form-horizontal qtyFrm">
+            <form class="form-horizontal qtyFrm" action="{{route('frontend.cart.store', ['id' => $product->id])}}" method="post">
+            @csrf
                 <div class="control-group">
-                    <h4>Rs. <span id="price">{{ $product->price }}</span></h4>
-                        <select name="size" id="size" class="span2 pull-left">
+                    @if (Cart::getdiscount($product->id) == 0)
+                    <h4 id="price">Rs. {{ $product->price }}</h4>
+                    @else
+                    <h4 id="price"><del>Rs. {{ $product->price }}</del> Rs. {{ $product->price - ($product->price * (Cart::getdiscount($product->id) / 100)) }}</h4>
+                    @endif
+
+                        <select title="Have to select a size!" name="size" id="size" class="span2 pull-left">
                             <option value="">Select Size</option>
                             @foreach ($product->products_attributes as $attribute)
-                            <option value="{{ $attribute->id }}">{{ $attribute->size }}</option>
+                            <option  value="{{ Crypt::encryptString($attribute->id) }}">{{ $attribute->size }}</option>
                             @endforeach
                         </select>
-                        <input type="number" class="span1" placeholder="Qty."/>
+                        <input id="quantity" name="quantity" type="number" min="1" class="span1" placeholder="Qty."/>
                         <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
                     </div>
                 </div>
             </form>
 <script>
     let sizeElem = document.getElementById('size');
+    let quantity = document.getElementById('quantity');
     sizeElem.addEventListener('change', ()=>{
         let size = sizeElem.value;
         let id ={{ $product->id }};
@@ -81,13 +98,36 @@
         }).then(res => res.json())
         .then((data) => {
             // console.log(data);
-            if(data.price > 0){
-                document.getElementById('price').innerHTML =data.price;
-            }else{
-                alert("Please select a size");
+            if((data.price > 0) && (data.discount == 0)){
+                document.getElementById('price').innerHTML="Rs. "+data.price;
+                    sizeElem.style.borderColor = 'red' ;
+            }
+            if((data.price > 0) && (data.discount > 0)){
+                document.getElementById('price').innerHTML='<del>Rs. '+data.price+'</del> Rs. '+(data.price - (data.price * (data.discount/100)));
+                if(sizeElem.style.borderColor == 'red'){
+                    sizeElem.style.borderColor = 'lightgray' ;
+                }
+            }
+            if((data.price > 0) && (data.discount == 0)){
+                document.getElementById('price').innerHTML='Rs. '+data.price;
+                if(sizeElem.style.borderColor == 'red'){
+                    sizeElem.style.borderColor = 'lightgray' ;
+                }
             }
         });
     })
+
+
+
+
+    quantity.addEventListener('change', ()=>{
+        let quantityValue = quantity.value;
+        if(quantityValue < 1){
+            quantity.style.borderColor = 'red';
+        }else{
+            quantity.style.borderColor = 'lightgray';
+        }
+    });
 
 </script>
 

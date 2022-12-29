@@ -25,7 +25,11 @@ $navsections = ProductSection::all();
                 <div class="span6">Welcome!<strong> User</strong></div>
                 <div class="span6">
                     <div class="pull-right">
-                        <a href="product_summary.html"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ 3 ] Items in your cart </span> </a>
+                        <a href="{{ route('frontend.cart.index') }}"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [
+                            @if (Session::has('numberOfCartItem'))
+                                {{ Session::get('numberOfCartItem') }}
+                            @endif
+                         ] Items in your cart </span> </a>
                     </div>
                 </div>
             </div>
@@ -53,7 +57,7 @@ $navsections = ProductSection::all();
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ $section->title }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                     @foreach ($section->product_categories as $category)
-                    @if(count($category->product_sub_categories) > 0)
+
                                 <li class="divider"></li>
                                 <li class="nav-header"><a href="{{ url('c/'.$category->url) }}"><strong>{{ $category->title }}</strong></a></li>
                                 @foreach($section->product_sub_categories as $sub_cat)
@@ -64,7 +68,7 @@ $navsections = ProductSection::all();
                                     @endif
                                 @endforeach
                                 <li class="divider"></li>
-                    @endif
+
                     @endforeach
                             </ul>
                           </li>

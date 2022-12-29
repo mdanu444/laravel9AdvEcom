@@ -13,7 +13,11 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
 @endphp
 <!-- Sidebar ================================================== -->
 			<div id="sidebar" class="span3">
-             <div class="well well-small"><a id="myCart" href="product_summary.html"><img src={{ asset("frontend/themes/images/ico-cart.png")}} alt="cart">3 Items in your cart</a></div>
+             <div class="well well-small"><a id="myCart" href="{{ route('frontend.cart.index') }}"><img src={{ asset("frontend/themes/images/ico-cart.png")}} alt="cart">
+                @if (Session::has('numberOfCartItem'))
+                    {{ Session::get('numberOfCartItem') }}
+                @endif
+                Items in your cart</a></div>
         <ul id="sideManu" class="nav nav-tabs nav-stacked">
 @foreach ($navsections as $section)
     @if (count($section->product_categories) > 0)
@@ -22,15 +26,13 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
 					<li class="subMenu"><a>{{ $section->title}}</a>
 						<ul>
             @foreach ($section->product_categories as $category)
-    @if (count($category->product_sub_categories)>0)
 
 							<li><a href="{{ url('c/'.$category->url)}}"><strong>{{  $category->title  }}</strong></a></li>
             @foreach ($category->product_sub_categories as $sub)
                 @if (count($sub->products)>0)
                     <li><a href="{{ url('s/'.$sub->url)}}"><i class="icon-chevron-right"></i>{{  $sub->title }}</></a></li>
                 @endif
-            @endforeach
-    @endif					</ul>
+            @endforeach				</ul>
         @endforeach
 					</li>
     @endif
@@ -49,7 +51,6 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
                 <label >
                     <input type="checkbox" style="padding-bottom: 10px; margin-bottom: 5px !important" class="{{ $key }}"  value="{{ $f[$key] }}"> {{ $f[$key] }}
                 </label>
-
             </li>
             @endforeach
         </ul>

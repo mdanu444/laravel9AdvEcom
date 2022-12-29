@@ -7,7 +7,9 @@ use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductImage;
 use App\Models\Admin\ProductsAttribute;
+use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 
 class ProductDetails extends Controller
@@ -33,10 +35,12 @@ class ProductDetails extends Controller
     public function getpricebysize(Request $request)
     {
         if ($request->size != "") {
-            $attributeprice = ProductsAttribute::find($request->size);
-            return ['price' => $attributeprice->price];
+            $request->size = Crypt::decryptString($request->size);
+            $attribute = ProductsAttribute::find($request->size);
+            $discount = Cart::getdiscount($attribute->products_id);
+            return ['price' => $attribute->price, 'discount' => $discount];
         } else {
-            return ['price' => 0];
+            return ['price' => 0, 'discount' => 0];
         }
     }
 }

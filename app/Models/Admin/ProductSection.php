@@ -20,6 +20,6 @@ class ProductSection extends Model
     }
     public function products()
     {
-        return $this->hasMany(Product::class)->where('status', 1);
+        return $this->hasMany(Product::class, 'sections_id', 'id')->where('status', 1);
     }
 }

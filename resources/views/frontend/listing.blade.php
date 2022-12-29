@@ -1,3 +1,8 @@
+@php
+    use App\Models\Cart;
+@endphp
+
+
 @extends('frontend.master')
 @section('mainbody')
 <div class="span9">
@@ -46,16 +51,7 @@
     <div class="tab-content" id="ajaxListingContainer">
         @include('frontend.ajax_listing')
     </div>
-    <a href="compair.html" class="btn btn-large pull-right">Compair Product</a>
-    {{-- <div class="pagination">
-        <ul>
-            @if (isset($_GET['sort']) && $_GET['sort'] != "")
-                {{ $products->appends(['sort'=>$_GET['sort']])->links() }}
-            @else
-            {{ $products->links() }}
-            @endif
-        </ul>
-    </div> --}}
+
     <br class="clr"/>
 </div>
 

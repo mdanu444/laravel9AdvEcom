@@ -1,3 +1,7 @@
+@php
+    use App\Models\Cart;
+@endphp
+
 @extends('frontend.master')
 @section('mainbody')
 <div class="span9" >
@@ -19,7 +23,15 @@
 												<a href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}"><img src={{ asset("images/product_image/small/".$featured['image'])}} alt=""></a>
 												<div class="caption">
 													<h5>{{ Str::words($featured['title'],5) }}</h5>
-													<h4><a class="btn" href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}">VIEW</a> <span class="pull-right">Rs.{{ $featured['price'] }}</span></h4>
+													<h4><a class="btn" href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}">VIEW</a>
+                                                        @if (Cart::getdiscount($featured['id']) > 0)
+                                                        <span style="line-height: 1" class="pull-right"><del>  Rs.{{ $featured['price'] }}</del> <br>
+                                                            Rs.{{ $featured['price'] - ($featured['price'] * (Cart::getdiscount($featured['id'])/100)) }}
+                                                        </span>
+                                                        @else
+                                                        <span class="pull-right">Rs.{{ $featured['price'] }}</span>
+                                                        @endif
+                                                    </h4>
 												</div>
 											</div>
 										</li>
@@ -48,7 +60,27 @@
 									{{ Str::words($item->description, 8)}}
 								</p>
 
-								<h4 style="text-align:center"><a class="btn" href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Rs.{{ $item->price}}</a></h4>
+								<h4 style="text-align:center">
+
+                                    <a class="btn" href="{{ route('frontend.product_details', ['id' => $featured['id']]) }}"> <i class="icon-zoom-in"></i></a>
+
+
+                                    @if (Cart::getdiscount($item->id) > 0)
+                                    <a class="btn btn-primary" href="#">
+                                        <del>Rs.{{ $item->price}}</del>
+                                        Rs. {{ $item->price - ($item->price * (Cart::getdiscount($item->id)/100))}}
+
+                                        </a>
+
+                                    @else
+                                    <a class="btn btn-primary" href="#">Rs.{{ $item->price}}</a>
+                                    @endif
+                                </h4>
+
+
+
+
+                                </h4>
 							</div>
 						</div>
 					</li>
