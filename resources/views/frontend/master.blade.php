@@ -2,7 +2,7 @@
 <x-frontend.navbar/>
 <!-- Header End====================================================================== -->
 @if (Session::has('pagetitle'))
-    @if(Session::get('pagetitle') == 'home')
+    @if(Session::get('pagetitle') == 'Home')
         <x-frontend.carousel/>
     @endif
 @endif

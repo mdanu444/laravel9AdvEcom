@@ -13,7 +13,7 @@ class Index extends Controller
 {
     public function index()
     {
-        Session::put('pagetitle', 'home');
+        Session::put('pagetitle', 'Home');
 
         $numberofproduct = count(Product::all());
         $featured_products = Product::where('featured', 1)->where('status', 1)->get()->toArray();
@@ -24,7 +24,7 @@ class Index extends Controller
     public function category(Request $request, $cat_link)
     {
 
-        Session::put('pagetitle', 'listing');
+        Session::put('pagetitle', 'Listing');
         $category = ProductCategory::where('url', $cat_link)->first();
         $subcategoryProducts = Product::where(['product_categories_id' => $category->id, 'status' => 1]);
 

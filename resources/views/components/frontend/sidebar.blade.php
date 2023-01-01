@@ -16,6 +16,8 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
              <div class="well well-small"><a id="myCart" href="{{ route('frontend.cart.index') }}"><img src={{ asset("frontend/themes/images/ico-cart.png")}} alt="cart">
                 @if (Session::has('numberOfCartItem'))
                     {{ Session::get('numberOfCartItem') }}
+                @else
+                    0
                 @endif
                 Items in your cart</a></div>
         <ul id="sideManu" class="nav nav-tabs nav-stacked">
@@ -39,7 +41,7 @@ $navsections = ProductSection::orderBy('id', 'desc')->get();
 @endforeach
         </ul>
 
-@if (Session::has('pagetitle') && Session::get('pagetitle') == 'listing')
+@if (Session::has('pagetitle') && Session::get('pagetitle') == 'Listing')
 <br><br>
 <h5>Filters</h5>
 <ul id="sideManu" class="nav nav-tabs nav-stacked">

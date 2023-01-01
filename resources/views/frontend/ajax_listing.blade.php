@@ -24,7 +24,9 @@
                         @if (Cart::getdiscount($product->id) > 0)
                         <a class="btn btn-primary" href="#">
                             <del>Rs.{{ $product->price}}</del>
-                            Rs. {{ $product->price - ($product->price * (Cart::getdiscount($product->id)/100))}}
+                            <span style="color: yellow">
+                                Rs. {{ $product->price - ($product->price * (Cart::getdiscount($product->id)/100))}}
+                            </span>
 
                             </a>
 

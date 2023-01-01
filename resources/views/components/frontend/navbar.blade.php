@@ -28,6 +28,8 @@ $navsections = ProductSection::all();
                         <a href="{{ route('frontend.cart.index') }}"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [
                             @if (Session::has('numberOfCartItem'))
                                 {{ Session::get('numberOfCartItem') }}
+                            @else
+                            0
                             @endif
                          ] Items in your cart </span> </a>
                     </div>

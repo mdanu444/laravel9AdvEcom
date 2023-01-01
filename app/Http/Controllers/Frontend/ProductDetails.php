@@ -16,8 +16,8 @@ class ProductDetails extends Controller
 {
     public function index($id)
     {
-        Session::put('pagetitle', 'Detail');
         $product = Product::where('status', 1)->findOrFail($id);
+        Session::put('pagetitle', $product->title);
         if ($product->product_sub_categories_id == 0) {
             $url = 'c/' . $product->product_categories->url;
             $url_status = 'category_url';

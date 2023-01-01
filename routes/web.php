@@ -42,6 +42,8 @@ Route::name('frontend.')->group(function () {
     Route::post('/getpricebysize', [ProductDetails::class, 'getpricebysize'])->name('getpricebysize');
     Route::post('/cart/{id}', [CartController::class, 'store'])->name('cart.store');
     Route::get('/carts', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart_update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart_delete', [CartController::class, 'delete'])->name('cart.delete');
 });
 
 

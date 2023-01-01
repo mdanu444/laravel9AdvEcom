@@ -40,7 +40,7 @@ class Cart extends Model
         }else{
             $session_id = 0;
         }
-        $cartItems = Cart::select('price', 'products_id', 'quantity', 'attributes_id')->where(['session_id'=> $session_id, 'users_id' => $user_id])->get();
+        $cartItems = Cart::select('id','price', 'products_id', 'quantity', 'attributes_id')->where(['session_id'=> $session_id, 'users_id' => $user_id])->get();
         return $cartItems;
     }
 
