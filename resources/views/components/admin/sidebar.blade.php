@@ -1,25 +1,27 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-  <!-- Brand Logo -->
-  <a href="index3.html" class="brand-link">
-    <img src={{ asset($sitelogo)}} alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-    <span class="brand-text font-weight-light">{{ $siteName }}</span>
-  </a>
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+        <img src={{ asset($sitelogo) }} alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">{{ $siteName }}</span>
+    </a>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <img src={{ asset(Auth::guard('admin')->check() ? url('storage/'.Auth::guard('admin')->user()->photo) : "images/unknown.webp" )}} class="img-circle elevation-2" alt="User Image">
-      </div>
-      <div class="info">
-        <a href="#" class="d-block">{{ Auth::guard('admin')->check() ? Auth::guard('admin')->user()->name : "Unknown"}}</a>
-      </div>
-    </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src={{ asset(Auth::guard('admin')->check() ? url('storage/' . Auth::guard('admin')->user()->photo) : 'images/unknown.webp') }}
+                    class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#"
+                    class="d-block">{{ Auth::guard('admin')->check() ? Auth::guard('admin')->user()->name : 'Unknown' }}</a>
+            </div>
+        </div>
 
-    <!-- SidebarSearch Form -->
-    {{--  <div class="form-inline">
+        <!-- SidebarSearch Form -->
+        {{--  <div class="form-inline">
       <div class="input-group" data-widget="sidebar-search">
         <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append"
@@ -33,106 +35,115 @@
 
 
 
-    <!-- Sidebar Menu -->
-    <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
              with font-awesome or any other icon font library -->
-        <li class="nav-item">
-          <a href="{{route('admin.home')}}" class="nav-link @if(Session::get('pageTitle') == 'Home')
-            active
-          @endif">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>
-              Dashboard
-              <i class="right "></i>
-            </p>
-          </a>
-        </li>
-        <li class="nav-item {{Session::get('pageTitle') == 'Profile' ? 'menu-open':''}}">
-          <a href="" class="nav-link {{Session::get('pageTitle') == 'Profile' ? 'active ':''}}">
-            <i class="nav-icon fa fa-user"></i>
-            <p>
-              Profile
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="{{route('admin.profile.changePassword')}}" class="nav-link   activable {{  Session::get('activer') == 'Change Password' ? 'active': '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Change Password</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.profile.update')}}" class="nav-link  {{  Session::get('activer') == 'Update Profile' ? 'active': '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Update Profile</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item {{Session::get('pageTitle') == 'Product Category' ? 'menu-open ':''}}">
-          <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product Category' ? 'active ':''}}">
-            <i class="nav-icon fa fa-clipboard"></i>
-            <p>
-                Catelogues
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="{{route('admin.productsections.index')}}" class="nav-link {{Session::get('activer') == 'Product Section' ? 'active ':''}}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Section</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.productcategory.index')}}" class="nav-link {{Session::get('activer') == 'Product Category' ? 'active ':''}}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Category</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.productsubcategory.index')}}" class="nav-link {{Session::get('activer') == 'Product Sub Category' ? 'active ':''}}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Sub Category</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.productbrands.index')}}" class="nav-link  {{Session::get('activer') == 'Product Brand' ? 'active ':''}}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Product Brand</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{route('admin.banner.index')}}" class="nav-link  {{Session::get('activer') == 'Product Banner' ? 'active ':''}}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Banners</p>
-              </a>
-            </li>
-          </ul>
-          <li class="nav-item {{Session::get('pageTitle') == 'Product' ? 'menu-open ':''}}">
-            <a href="" class=" nav-link {{Session::get('pageTitle') == 'Product' ? 'active ':''}}">
-              <i class="nav-icon fab fa-product-hunt"></i>
-              <p>
-                  Products
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{route('admin.product.index')}}" class="nav-link {{Session::get('activer') == 'Product List' ? 'active ':''}}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Product List</p>
-                </a>
-              </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.home') }}"
+                        class="nav-link @if (Session::get('pageTitle') == 'Home') active @endif">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                            <i class="right "></i>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item {{ Session::get('pageTitle') == 'Profile' ? 'menu-open' : '' }}">
+                    <a href="" class="nav-link {{ Session::get('pageTitle') == 'Profile' ? 'active ' : '' }}">
+                        <i class="nav-icon fa fa-user"></i>
+                        <p>
+                            Profile
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.profile.changePassword') }}"
+                                class="nav-link   activable {{ Session::get('activer') == 'Change Password' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Change Password</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.profile.update') }}"
+                                class="nav-link  {{ Session::get('activer') == 'Update Profile' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Update Profile</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item {{ Session::get('pageTitle') == 'Product Category' ? 'menu-open ' : '' }}">
+                    <a href=""
+                        class=" nav-link {{ Session::get('pageTitle') == 'Product Category' ? 'active ' : '' }}">
+                        <i class="nav-icon fa fa-clipboard"></i>
+                        <p>
+                            Catelogues
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.productsections.index') }}"
+                                class="nav-link {{ Session::get('activer') == 'Product Section' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Section</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.productcategory.index') }}"
+                                class="nav-link {{ Session::get('activer') == 'Product Category' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Category</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.productsubcategory.index') }}"
+                                class="nav-link {{ Session::get('activer') == 'Product Sub Category' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sub Category</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.productbrands.index') }}"
+                                class="nav-link  {{ Session::get('activer') == 'Product Brand' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Product Brand</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.banner.index') }}"
+                                class="nav-link  {{ Session::get('activer') == 'Product Banner' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Banners</p>
+                            </a>
+                        </li>
+                    </ul>
+                <li class="nav-item {{ Session::get('pageTitle') == 'Product' ? 'menu-open ' : '' }}">
+                    <a href="" class=" nav-link {{ Session::get('pageTitle') == 'Product' ? 'active ' : '' }}">
+                        <i class="nav-icon fab fa-product-hunt"></i>
+                        <p>
+                            Products
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.product.index') }}"
+                                class="nav-link {{ Session::get('activer') == 'Product List' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Product List</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                </li>
             </ul>
-          </li>
-        </li>
-      </ul>
-    </nav>
-    <!-- /.sidebar-menu -->
-  </div>
-  <!-- /.sidebar -->
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
 </aside>

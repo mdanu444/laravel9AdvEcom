@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProductSubCategoryController;
 use App\Http\Controllers\Frontend\Index;
 use App\Http\Controllers\Frontend\ProductDetails;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Product;
@@ -34,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::name('frontend.')->group(function () {
+Route::middleware(['cartCleaner'])->name('frontend.')->group(function () {
     Route::get('/', [Index::class, 'index'])->name('index');
     Route::match(['get', 'post'], 'c/{cat_link}', [Index::class, 'category'])->name('category');
     Route::match(['get', 'post'], 's/{sub_link}', [Index::class, 'subcat'])->name('subcat');
@@ -44,6 +45,20 @@ Route::name('frontend.')->group(function () {
     Route::get('/carts', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart_update', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart_delete', [CartController::class, 'delete'])->name('cart.delete');
+    Route::get('/logreg', [UserController::class, 'index'])->name('logreg.index');
+    Route::get('/account', [UserController::class, 'account'])->name('user.account');
+    Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
+    Route::post('/register', [UserController::class, 'register'])->name('user.register');
+    Route::post('/login', [UserController::class, 'login'])->name('user.login');
+    Route::post('/emailunickness', [UserController::class, 'emailunickness'])->name('user.emailunickness');
+    Route::put('/updateuser', [UserController::class, 'updateuser'])->name('user.updateuser');
+
+    // for sms
+    Route::post('/varification', [UserController::class, 'varification'])->name('user.varification');
+    Route::get('/varificationview', [UserController::class, 'varificationview'])->name('user.varificationview');
+    Route::get('/accountverify/{id}', [UserController::class, 'accountverify'])->name('user.accountverify');
+    Route::get('/forgotpassview', [UserController::class, 'forgotpassview'])->name('user.forgotpassview');
+    Route::post('/forgotpass', [UserController::class, 'forgotpass'])->name('user.forgotpass');
 });
 
 

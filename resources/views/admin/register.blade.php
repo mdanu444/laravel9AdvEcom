@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Admin Registration</title>
-    <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 </head>
+
 <body>
     <div class="container">
         <div class="col-md-4 offset-4 mt-4">
-            <h1>Admin Registration</h1><hr>
+            <h1>Admin Registration</h1>
+            <hr>
             @if (Session::has('message'))
-                <div class="alert alert-success">{{Session::get('message')}}</div>
+                <div class="alert alert-success">{{ Session::get('message') }}</div>
             @endif
             @if ($errors->any())
                 <div class="alert alert-danger p-2">
                     @foreach ($errors->all() as $error)
-                    <ul>
-                        <li>{{$error}}</li>
-                    </ul>
+                        <ul>
+                            <li>{{ $error }}</li>
+                        </ul>
                     @endforeach
                 </div>
             @endif
-            <form action="{{route('admin.save')}}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.save') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -39,7 +42,7 @@
                 </div>
                 <div class="form-group">
                     <label for="formFile">photo</label>
-                    <input type="file" id="formFile"  name="photo" class="custom-file-input">
+                    <input type="file" id="formFile" name="photo" class="custom-file-input">
                 </div>
                 <div class="form-group">
                     <label for="password">password</label>
@@ -53,4 +56,5 @@
         </div>
     </div>
 </body>
+
 </html>

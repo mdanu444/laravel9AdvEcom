@@ -30,15 +30,18 @@ class Cart extends Model
     }
 
     public static function getCartItems(){
-        if(Auth::check()){
-            $user_id = Auth::id();
-        }else{
-            $user_id = 0;
-        }
+
         if(Session::has('session_id')){
             $session_id = Session::get('session_id');
         }else{
+            $session_id = Session::put('session_id', Session::getId());
+        }
+
+        if(Auth::check()){
+            $user_id = Auth::id();
             $session_id = 0;
+        }else{
+            $user_id = 0;
         }
         $cartItems = Cart::select('id','price', 'products_id', 'quantity', 'attributes_id')->where(['session_id'=> $session_id, 'users_id' => $user_id])->get();
         return $cartItems;
@@ -52,5 +55,29 @@ class Cart extends Model
         $cartProduct['attribute'] = $attribute;
         $cartProduct['discount'] = Self::getdiscount($product_id);
         return $cartProduct;
+    }
+    public static function makeCartForUser(){
+        $cartItems = Self::getCartItems();
+        if(Session::has('session_id')){
+            $session_id = Session::get('session_id');
+        }else{
+            $session_id = Session::put('session_id', Session::getId());
+        }
+            Cart::where('session_id', $session_id)->update(['users_id' => Auth::id(), 'session_id' => 0]);
+    }
+
+    public static function cleanCart(){
+        Cart::where('session_id', '!=', Session::getId())->where('users_id', 0)->delete();
+    }
+    public static function cleanUserCart(){
+        $cartItems = Cart::all();
+        foreach($cartItems as $firstcart){
+            $updated_at = strtotime($firstcart->updated_at);
+            $now = strtotime(now());
+            $diffrent = $now - $updated_at;
+            if($diffrent > (86400*3)){
+                Cart::destroy($firstcart->id);
+            }
+        }
     }
 }

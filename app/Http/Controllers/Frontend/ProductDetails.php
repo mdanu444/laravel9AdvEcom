@@ -16,6 +16,9 @@ class ProductDetails extends Controller
 {
     public function index($id)
     {
+        $cartitems = Cart::getCartItems();
+        $numberOfCartItem = count($cartitems);
+        Session::put('numberOfCartItem', $numberOfCartItem);
         $product = Product::where('status', 1)->findOrFail($id);
         Session::put('pagetitle', $product->title);
         if ($product->product_sub_categories_id == 0) {

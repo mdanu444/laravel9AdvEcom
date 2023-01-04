@@ -15,5 +15,6 @@ class VerifyCsrfToken extends Middleware
         '/admin/statuschanger',
         '/admin/getcategorybysection',
         'admin/getsubcategorybysection',
+        '/emailunickness ',
     ];
 }

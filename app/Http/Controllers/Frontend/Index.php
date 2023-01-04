@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductSubCategory;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -14,6 +15,9 @@ class Index extends Controller
     public function index()
     {
         Session::put('pagetitle', 'Home');
+        $cartitems = Cart::getCartItems();
+        $numberOfCartItem = count($cartitems);
+        Session::put('numberOfCartItem', $numberOfCartItem);
 
         $numberofproduct = count(Product::all());
         $featured_products = Product::where('featured', 1)->where('status', 1)->get()->toArray();

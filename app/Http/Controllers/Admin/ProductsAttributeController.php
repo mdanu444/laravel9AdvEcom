@@ -22,7 +22,7 @@ class ProductsAttributeController extends Controller
         $did = Crypt::decryptString($product);
         $product = Product::findOrFail($did);
         $data = ProductsAttribute::where('products_id', $did)->get();
-        return view('admin.product.attribute.index', ['product' => $product, 'data' => $data] );
+        return view('admin.product.attribute.index', ['product' => $product, 'data' => $data]);
     }
 
 
@@ -39,11 +39,11 @@ class ProductsAttributeController extends Controller
         foreach ($request->size as $key => $value) {
 
             $size = ProductsAttribute::where('products_id', $did)->where('size', $request->size[$key])->get();
-            if(count($size)> 0){
+            if (count($size) > 0) {
                 return redirect()->back()->with('message', "Size already added !");
             }
             $sku = ProductsAttribute::where('products_id', $did)->where('sku', $request->sku[$key])->get();
-            if(count($sku)> 0){
+            if (count($sku) > 0) {
                 return redirect()->back()->with('message', "Sku already added !");
             }
             $ProductsAttribute = new ProductsAttribute;
@@ -59,7 +59,7 @@ class ProductsAttributeController extends Controller
 
 
     public function destroy($product, $id)
-    {   
+    {
         $did = Crypt::decryptString($id);
         ProductsAttribute::destroy($did);
         return redirect()->route('admin.p_attribute.index', $product)->with('message', "Attribute Deleted Successfull!");
