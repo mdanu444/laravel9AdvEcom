@@ -59,6 +59,8 @@ Route::middleware(['cartCleaner'])->name('frontend.')->group(function () {
     Route::get('/accountverify/{id}', [UserController::class, 'accountverify'])->name('user.accountverify');
     Route::get('/forgotpassview', [UserController::class, 'forgotpassview'])->name('user.forgotpassview');
     Route::post('/forgotpass', [UserController::class, 'forgotpass'])->name('user.forgotpass');
+    Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
+    Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
 });
 
 

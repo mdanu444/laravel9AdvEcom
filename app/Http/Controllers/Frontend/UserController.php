@@ -166,4 +166,29 @@ class UserController extends Controller
         }
         return redirect()->back()->with('error_msg', 'Email does not exist. Please register first.');
     }
+    public function checkpass(Request $request){
+        $user = User::find(Auth::id());
+        if(Hash::check($request->oldpassword, $user->password)){
+            return ['status' => true];
+        }
+        return ['status' => false];
+    }
+    public function updatepassword(Request $request){
+        $request->validate([
+            'oldpassword' =>"required",
+            'newpassword' => "required",
+            'confirmpassword' => 'same:newpassword'
+        ],[
+            'confirmpassword.same'=>"New password and confirm password filed must be same !"
+        ]);
+        $user = User::find(Auth::id());
+        if(Hash::check($request->oldpassword, $user->password)){
+            $user->password = Hash::make($request->newpassword);
+            if($user->save()){
+                return redirect()->back()->with('success_msg', 'Password Updated.');
+            }
+        }else{
+            return redirect()->back()->with('error_msg', 'Currnet Password did not matched.');
+        }
+    }
 }

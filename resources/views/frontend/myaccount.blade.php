@@ -91,13 +91,68 @@
             </div>
             <div class="span4">
                 <div class="well">
-                    <p>user functions will be here. Functions are like: show orders, Show Invoices, etc.</p>
+                    <form id="regform" action="{{ route('frontend.user.updatepassword') }}" method="post">
+                        @csrf
+                        @method('put')
+
+                        <div class="control-group">
+                            <label class="control-label" for="oldpassword">Old Password</label>
+                            <div class="controls">
+                                <input  class="span3" value="" name="oldpassword" type="password"
+                                    id="oldpassword" placeholder="Old Password">
+                                    <br><span id="OldPassResult"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="newpassword">New Password</label>
+                            <div class="controls">
+                                <input  class="span3" value="" name="newpassword" type="password"
+                                    id="newpassword" placeholder="New Password">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="confirmpassword">Confirm Password</label>
+                            <div class="controls">
+                                <input  class="span3" value="" name="confirmpassword" type="password"
+                                    id="confirmpassword" placeholder="Confirm Password">
+                            </div>
+                        </div>
+
+                        <div class="controls">
+                            <button type="submit" class="btn block">Update Password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="span1"> &nbsp;</div>
-
-
         </div>
-
     </div>
+    <script>
+        let oldpasswordInput = document.getElementById('oldpassword');
+        function sendData(){
+            let formData = new FormData();
+            formData.append('oldpassword', oldpasswordInput.value);
+            fetch("{{ route('frontend.user.checkpass') }}", {
+                method:'post',
+                body: formData,
+                headers:{
+                    "X-CSRF-Token":document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            }).then(res => res.json())
+            .then((data) =>{
+                if(data.status == true){
+                    document.getElementById('OldPassResult').innerHTML = "Password Matched !";
+                    document.getElementById('OldPassResult').style.color = "green";
+                }else{
+                    document.getElementById('OldPassResult').innerHTML = "Wrong Password !";
+                    document.getElementById('OldPassResult').style.color = "red";
+                }
+            })
+        }
+        let myTimeout;
+        oldpasswordInput.addEventListener('keyup', ()=>{
+            clearTimeout(myTimeout);
+            myTimeout = setTimeout(sendData, 1000);
+        });
+    </script>
 @endsection
