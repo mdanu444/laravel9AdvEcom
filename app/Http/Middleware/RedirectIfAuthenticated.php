@@ -26,6 +26,9 @@ class RedirectIfAuthenticated
                 if ($guard === 'admin') {
                     return redirect()->route('admin.home');
                 }
+                if ($guard === 'web') {
+                    return redirect()->route('frontend.user.account');
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }
