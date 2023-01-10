@@ -5,8 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-        @if (Session::has('pageTitle'))
-            {{ Session::get('pageTitle') }}
+        @if (Session::has('activer'))
+                {{ Session::get('activer') }}
+        @else
+            @if (Session::has('pageTitle'))
+                {{ Session::get('pageTitle') }}
+            @endif
         @endif
     </title>
     {{--  <!-- jQuery -->  --}}

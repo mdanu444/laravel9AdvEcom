@@ -121,6 +121,13 @@
                                 <p>Banners</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.coupons.index') }}"
+                                class="nav-link  {{ Session::get('activer') == 'Product Coupon' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Coupons </p>
+                            </a>
+                        </li>
                     </ul>
                 <li class="nav-item {{ Session::get('pageTitle') == 'Product' ? 'menu-open ' : '' }}">
                     <a href="" class=" nav-link {{ Session::get('pageTitle') == 'Product' ? 'active ' : '' }}">

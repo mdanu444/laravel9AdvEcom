@@ -44,8 +44,8 @@
                         <label for="subcategory">Select Sub Category</label>
                         <select class="col-md-11 subcategoryoptionviewer selecttion form-control js-example-basic-single"
                             name="product_sub_categories_id" id="subcategory">
-                            <option selected value="">Select Sub Category</option>
-                            <option selected value="{{ Crypt::encryptString(0) }}">None</option>
+                            <option selected value=""> Select Sub Category</option>
+                            <option  value=" {{ Crypt::encryptString(0) }}">None</option>
                         </select>
                         @error('product_sub_categories_id')
                             <span class="text-danger">{{ $message }}</span>
