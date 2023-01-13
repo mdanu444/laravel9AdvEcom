@@ -9,8 +9,8 @@ class Coupon extends Model
 {
     use HasFactory;
 
-    public static function getStrToArr($categoriesids){
-        $cagegoriesIdArray = explode(',', $categoriesids);
+    public static function getStrToArr($string){
+        $cagegoriesIdArray = explode(',', $string);
         return $cagegoriesIdArray;
     }
 }

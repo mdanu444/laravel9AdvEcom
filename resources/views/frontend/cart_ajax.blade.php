@@ -16,13 +16,14 @@
     <tbody>
         @php
             $totalAmount = 0;
+            $total_quantity = 0;
             $productDiscount = 0;
-            $couponDiscount = 0;
             $grandTotal = 0;
         @endphp
         @foreach ($cartitems as $cartitem)
             @php
                 // product attribute discount
+                $total_quantity += $cartitem->quantity;
                 $CartProduct = Cart::getCartProducts($cartitem->products_id, $cartitem->attributes_id);
             @endphp
             <tr>
@@ -52,8 +53,7 @@
                 @php
                     $totalAmount += $cartitem->quantity * ($cartitem->price - $cartitem->price * ($CartProduct['discount'] / 100));
                     $productDiscount = $cartitem->price * ($CartProduct['discount'] / 100);
-                    $couponDiscount = 0;
-                    $grandTotal = $totalAmount - $productDiscount - $couponDiscount;
+                    $grandTotal = $totalAmount - $productDiscount;
                 @endphp
 
                 <td>Rs.{{ number_format($cartitem->price, 2) }}</td>
@@ -68,13 +68,24 @@
             <td> Rs. {{ number_format($totalAmount, 2) }}</td>
         </tr>
         <tr>
-            <td colspan="5" style="text-align:right">Total Discount: </td>
-            <td> Rs. {{ number_format($couponDiscount, 2) }}</td>
+            <td colspan="5" style="text-align:right">Coupon Discount: </td>
+            <td> Rs.
+                @if ($coupon_amount_type == 'persantage')
+                    {{ number_format($totalAmount * ($coupon / 100), 2) }}
+                @else
+                    {{ number_format(($total_quantity * $coupon), 2) }}
+                @endif
+            </td>
         </tr>
         <tr>
             <td colspan="5" style="text-align:right"><strong>GRAND TOTAL (Total Price - Coupon Discount) =</strong>
             </td>
-            <td class="label label-important" style="display:block"> <strong> Rs. {{ number_format($grandTotal, 2) }}
+            <td class="label label-important" style="display:block"> <strong> Rs.
+                    @if ($coupon_amount_type == 'persantage')
+                        {{ number_format($totalAmount - $totalAmount * ($coupon / 100), 2) }}
+                    @else
+                        {{ number_format($totalAmount - ( $total_quantity * $coupon), 2) }}
+                    @endif
                 </strong></td>
         </tr>
     </tbody>

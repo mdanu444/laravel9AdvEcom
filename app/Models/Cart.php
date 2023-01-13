@@ -13,6 +13,10 @@ class Cart extends Model
 {
     use HasFactory;
 
+    public function product(){
+        return $this->belongsTo(Product::class, 'products_id');
+    }
+
     public static function getdiscount($product_id){
         $discount = 0;
         $product = Product::select('id', 'product_sub_categories_id', 'product_categories_id','discount', 'price')->where('id', $product_id)->where('status', 1)->first();
@@ -43,7 +47,7 @@ class Cart extends Model
         }else{
             $user_id = 0;
         }
-        $cartItems = Cart::select('id','price', 'products_id', 'quantity', 'attributes_id')->where(['session_id'=> $session_id, 'users_id' => $user_id])->get();
+        $cartItems = Cart::where(['session_id'=> $session_id, 'users_id' => $user_id])->get();
         return $cartItems;
     }
 

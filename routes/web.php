@@ -39,39 +39,39 @@ use Illuminate\Support\Facades\Route;
 
 
 // // for frontend start from here
-// Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->group(function () {
-//     Route::get('/', [Index::class, 'index'])->name('index');
-//     Route::match(['get', 'post'], 'c/{cat_link}', [Index::class, 'category'])->name('category');
-//     Route::match(['get', 'post'], 's/{sub_link}', [Index::class, 'subcat'])->name('subcat');
-//     Route::get('/details/{id}', [ProductDetails::class, 'index'])->name('product_details');
-//     Route::post('/getpricebysize', [ProductDetails::class, 'getpricebysize'])->name('getpricebysize');
-//     Route::post('/cart/{id}', [CartController::class, 'store'])->name('cart.store');
-//     Route::get('/carts', [CartController::class, 'index'])->name('cart.index');
-//     Route::post('/cart_update', [CartController::class, 'update'])->name('cart.update');
-//     Route::post('/cart_delete', [CartController::class, 'delete'])->name('cart.delete');
-//     Route::post('/emailunickness', [UserController::class, 'emailunickness'])->name('user.emailunickness');
+Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->group(function () {
+    Route::get('/', [Index::class, 'index'])->name('index');
+    Route::match(['get', 'post'], 'c/{cat_link}', [Index::class, 'category'])->name('category');
+    Route::match(['get', 'post'], 's/{sub_link}', [Index::class, 'subcat'])->name('subcat');
+    Route::get('/details/{id}', [ProductDetails::class, 'index'])->name('product_details');
+    Route::post('/getpricebysize', [ProductDetails::class, 'getpricebysize'])->name('getpricebysize');
+    Route::post('/cart/{id}', [CartController::class, 'store'])->name('cart.store');
+    Route::get('/carts', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart_update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart_delete', [CartController::class, 'delete'])->name('cart.delete');
+    Route::post('/emailunickness', [UserController::class, 'emailunickness'])->name('user.emailunickness');
 
-//     // user login and registration
-//     Route::group(['middleware' => ['guest:web']], function(){
-//         Route::get('/forgotpassview', [UserController::class, 'forgotpassview'])->name('user.forgotpassview');
-//         Route::post('/forgotpass', [UserController::class, 'forgotpass'])->name('user.forgotpass');
-//         Route::post('/login', [UserController::class, 'login'])->name('user.login');
-//         Route::get('/logreg', [UserController::class, 'index'])->name('logreg.index');
-//         Route::post('/register', [UserController::class, 'register'])->name('user.register');
-//         Route::get('/accountverify/{id}', [UserController::class, 'accountverify'])->name('user.accountverify');
-//         // for sms
-//         Route::post('/varification', [UserController::class, 'varification'])->name('user.varification');
-//         Route::get('/varificationview', [UserController::class, 'varificationview'])->name('user.varificationview');
-//     });
-//     Route::group(['middleware' => ["auth:web"]], function(){
-//         Route::put('/updateuser', [UserController::class, 'updateuser'])->name('user.updateuser');
-//         Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
-//         Route::get('/account', [UserController::class, 'account'])->name('user.account');
-//         Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
-//         Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
-//     });
+    // user login and registration
+    Route::group(['middleware' => ['guest:web']], function(){
+        Route::get('/forgotpassview', [UserController::class, 'forgotpassview'])->name('user.forgotpassview');
+        Route::post('/forgotpass', [UserController::class, 'forgotpass'])->name('user.forgotpass');
+        Route::post('/login', [UserController::class, 'login'])->name('user.login');
+        Route::get('/logreg', [UserController::class, 'index'])->name('logreg.index');
+        Route::post('/register', [UserController::class, 'register'])->name('user.register');
+        Route::get('/accountverify/{id}', [UserController::class, 'accountverify'])->name('user.accountverify');
+        // for sms
+        Route::post('/varification', [UserController::class, 'varification'])->name('user.varification');
+        Route::get('/varificationview', [UserController::class, 'varificationview'])->name('user.varificationview');
+    });
+    Route::group(['middleware' => ["auth:web"]], function(){
+        Route::put('/updateuser', [UserController::class, 'updateuser'])->name('user.updateuser');
+        Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
+        Route::get('/account', [UserController::class, 'account'])->name('user.account');
+        Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
+        Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
+    });
 
-// });
+});
 
 
 // for admin panel start from here

@@ -37,7 +37,6 @@ class ProductsAttributeController extends Controller
         ]);
         echo "<pre>";
         foreach ($request->size as $key => $value) {
-
             $size = ProductsAttribute::where('products_id', $did)->where('size', $request->size[$key])->get();
             if (count($size) > 0) {
                 return redirect()->back()->with('message', "Size already added !");

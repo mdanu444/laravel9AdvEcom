@@ -59,7 +59,8 @@
                             </div>
                             <div class="control-group">
                                 <div class="controls">
-                                    <a href="{{ route('frontend.user.forgotpassview') }}" style="text-decoration:underline">Forgot password ?</a>
+                                    <a href="{{ route('frontend.user.forgotpassview') }}"
+                                        style="text-decoration:underline">Forgot password ?</a>
                                 </div>
                             </div>
                         </form>
@@ -76,12 +77,13 @@
             <tbody>
                 <tr>
                     <td>
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" action="/getcoupon">
+                            @csrf
                             <div class="control-group">
-                                <label class="control-label"><strong> VOUCHERS CODE: </strong> </label>
+                                <label class="control-label"><strong> COUPON CODE: </strong> </label>
                                 <div class="controls">
-                                    <input type="text" class="input-medium" placeholder="CODE">
-                                    <button type="submit" class="btn"> ADD </button>
+                                    <input required id="coupone_code" type="text" class="input-medium" placeholder="CODE">
+                                    <button onclick="getcoupon(event)" type="submit" class="btn"> ADD </button>
                                 </div>
                             </div>
                         </form>
@@ -92,39 +94,66 @@
         </table>
 
         <!-- <table class="table table-bordered">
-       <tr><th>ESTIMATE YOUR SHIPPING </th></tr>
-       <tr>
-       <td>
-        <form class="form-horizontal">
-        <div class="control-group">
-         <label class="control-label" for="inputCountry">Country </label>
-         <div class="controls">
-         <input type="text" id="inputCountry" placeholder="Country">
-         </div>
-        </div>
-        <div class="control-group">
-         <label class="control-label" for="inputPost">Post Code/ Zipcode </label>
-         <div class="controls">
-         <input type="text" id="inputPost" placeholder="Postcode">
-         </div>
-        </div>
-        <div class="control-group">
-         <div class="controls">
-         <button type="submit" class="btn">ESTIMATE </button>
-         </div>
-        </div>
-        </form>
-       </td>
-       </tr>
-                </table> -->
+           <tr><th>ESTIMATE YOUR SHIPPING </th></tr>
+           <tr>
+           <td>
+            <form class="form-horizontal">
+            <div class="control-group">
+             <label class="control-label" for="inputCountry">Country </label>
+             <div class="controls">
+             <input type="text" id="inputCountry" placeholder="Country">
+             </div>
+            </div>
+            <div class="control-group">
+             <label class="control-label" for="inputPost">Post Code/ Zipcode </label>
+             <div class="controls">
+             <input type="text" id="inputPost" placeholder="Postcode">
+             </div>
+            </div>
+            <div class="control-group">
+             <div class="controls">
+             <button type="submit" class="btn">ESTIMATE </button>
+             </div>
+            </div>
+            </form>
+           </td>
+           </tr>
+                    </table> -->
         <a href="{{ route('frontend.index') }}" class="btn btn-large"><i class="icon-arrow-left"></i> Continue Shopping </a>
         <a href="{{ route('frontend.logreg.index') }}" class="btn btn-large pull-right">Next <i
                 class="icon-arrow-right"></i></a>
 
     </div>
     <script>
+
         let myinput = document.getElementById("quantityInput");
+
         let minimum = 1;
+
+        function getcoupon(e) {
+            e.preventDefault();
+            let coupone_code_input = document.getElementById('coupone_code');
+            @auth
+             let user = 1;
+            @endauth
+            @guest
+                let user = 0;
+            @endguest
+            if(user == 1){
+                let code = coupone_code_input.value;
+                if(code.length < 1){
+                    alert('Please enter coupon code !');
+                }
+                if(code.length > 0){
+                    updateCart(0, 0, code)
+                    // coupone_code_input.disabled = true;
+                    // e.target.disabled = true;
+                }
+            }else{
+                alert("Please login to apply coupon !");
+            }
+
+        }
 
         function quantitycanger(input) {
             if (input.value < minimum) {
@@ -132,7 +161,6 @@
             }
             let id = input.getAttribute('data');
             updateCart(id, input.value)
-
         }
 
         function minus(minus) {
@@ -157,11 +185,14 @@
             deleteCart(id);
         }
 
-        function updateCart(id, quantity) {
+        function updateCart(id, quantity, code="") {
             let url = "{{ route('frontend.cart.update') }}";
             let formData = new FormData();
             formData.append('id', id);
             formData.append('quantity', quantity);
+            if(code != ""){
+                formData.append('code', code);
+            }
             fetch(url, {
                     method: "post",
                     body: formData,
@@ -207,8 +238,10 @@
                 cartLoadable.innerHTML = data.html;
             }
             if (data.status == false) {
-                cartLoadable.innerHTML = data.html;
                 alert(data.message);
+                if(data.html){
+                    cartLoadable.innerHTML = data.html;
+                }
             }
             loading();
         }

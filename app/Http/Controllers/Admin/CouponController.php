@@ -54,7 +54,6 @@ class CouponController extends Controller
             'option' => 'required',
             'coupon_type' => "required",
             'categories' => 'required',
-            'users' => 'required',
             'expiry_date' => 'required',
             'amount_type' => 'required',
             'amount' => "required|integer",
@@ -81,7 +80,10 @@ class CouponController extends Controller
 
 
 
-        $users = implode(',', $request->users);
+        $users = "";
+        if(isset($request->users)){
+            $users = implode(',', $request->users);
+        }
 
         $date = date('Y-m-d H:i:s',strtotime($request->expiry_date));
         $coupon = new Coupon();
@@ -141,7 +143,6 @@ class CouponController extends Controller
             'option' => 'required',
             'coupon_type' => "required",
             'categories' => 'required',
-            'users' => 'required',
             'expiry_date' => 'required',
             'amount_type' => 'required',
             'amount' => "required|integer",
@@ -168,13 +169,15 @@ class CouponController extends Controller
 
 
 
-        $users = implode(',', $request->users);
+        $users = "";
+        if(isset($request->users)){
+            $users = implode(',', $request->users);
+        }
 
         $date = date('Y-m-d H:i:s',strtotime($request->expiry_date));
         $did = Crypt::decryptString($id);
         $coupon = Coupon::find($did);
         $coupon->option = $request->option;
-        $coupon->code = $code;
         $coupon->categories = $categories;
         $coupon->subcategories = $sub_categories;
         $coupon->users = $users;

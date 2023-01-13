@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
+use App\Models\Admin\ProductsAttribute;
 use App\Models\Admin\ProductSection;
 use App\Models\Admin\ProductSubCategory;
 use Illuminate\Http\Request;
@@ -125,8 +126,15 @@ class ProductController extends Controller
             $video_tmp->move($video_path, $video_name);
         }
 
-
         $product->save();
+
+        $ProductsAttribute = new ProductsAttribute();
+        $ProductsAttribute->products_id = $product->id;
+        $ProductsAttribute->size = "Regular";
+        $ProductsAttribute->sku =$product->code."S";
+        $ProductsAttribute->price = $product->price;
+        $ProductsAttribute->stock = 1;
+        $ProductsAttribute->save();
 
         return redirect()->back()->with('message', "Product Added Successfully!");
     }

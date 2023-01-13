@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <h3 class="h4">Coupon Option</h3>
                     <label for="automatic"> Automatic&nbsp;
-                        <input onclick="optionchanger('automatic')" type="radio" value="automatic" name="option"
+                        <input checked onclick="optionchanger('automatic')" type="radio" value="automatic" name="option"
                             id="automatic" class="option">
                     </label>&nbsp;&nbsp;
                     <label for="manual"> Manual&nbsp;
@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <h3 class="h4">Coupon Type</h3>
                     <label for="multiple"> Multiple Times&nbsp;
-                        <input type="radio" value="multiple" name="coupon_type" id="multiple" class="coupon_type">
+                        <input checked type="radio" value="multiple" name="coupon_type" id="multiple" class="coupon_type">
                     </label>&nbsp;&nbsp;
                     <label for="single"> Single Time&nbsp;
                         <input type="radio" value="single" name="coupon_type" id="single" class="coupon_type">
@@ -83,7 +83,7 @@
                 <div class="form-group">
                     <h3 class="h4">Coupon Amount Type</h3>
                     <label for="persantage"> Persantage&nbsp;
-                        <input  type="radio" value="persantage" name="amount_type"
+                        <input checked type="radio" value="persantage" name="amount_type"
                             id="persantage" class="amount_type">
                     </label>&nbsp;&nbsp;
                     <label for="fixed"> Fixed Amount in BDT &nbsp;
