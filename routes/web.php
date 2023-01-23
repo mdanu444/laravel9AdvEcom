@@ -67,8 +67,16 @@ Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->gro
         Route::put('/updateuser', [UserController::class, 'updateuser'])->name('user.updateuser');
         Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
         Route::get('/account', [UserController::class, 'account'])->name('user.account');
+
+        Route::get('/addnewshippingaddress', [UserController::class, 'addnewshippingaddress'])->name('user.addnewshippingaddress');
+        Route::post('/addnewshippingaddress', [UserController::class, 'storeshippingaddress'])->name('user.storeshippingaddress');
+        Route::get('/addnewshippingaddress/{id}/edit', [UserController::class, 'editshippingaddress'])->name('user.addnewshippingaddress.edit');
+        Route::put('/addnewshippingaddress/{id}', [UserController::class, 'updateshippingaddress'])->name('user.addnewshippingaddress.update');
+        Route::get('/addnewshippingaddress/{id}/delete', [UserController::class, 'deleteshippingaddress'])->name('user.addnewshippingaddress.delete');
+
         Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
         Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
+        Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
     });
 
 });

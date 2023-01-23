@@ -70,10 +70,24 @@
         <tr>
             <td colspan="5" style="text-align:right">Coupon Discount: </td>
             <td> Rs.
-                @if ($coupon_amount_type == 'persantage')
-                    {{ number_format($totalAmount * ($coupon / 100), 2) }}
+                @if ($coupon > 0)
+                    @if ($coupon_amount_type == 'persantage')
+                        {{ number_format($totalAmount * ($coupon / 100), 2) }}
+                        @php
+                            Session::put('coupon_amount', $totalAmount * ($coupon / 100));
+                        @endphp
+                    @else
+                        {{ number_format($coupon, 2) }}
+                        @php
+                            Session::put('coupon_amount', $coupon);
+                        @endphp
+                     @endif
                 @else
-                    {{ number_format(($total_quantity * $coupon), 2) }}
+                    @if(Session::has('coupon_amount'))
+                      {{ number_format(Session::get('coupon_amount'),2) }}
+                    @else
+                     {{ 0.00 }}
+                    @endif
                 @endif
             </td>
         </tr>
@@ -81,12 +95,28 @@
             <td colspan="5" style="text-align:right"><strong>GRAND TOTAL (Total Price - Coupon Discount) =</strong>
             </td>
             <td class="label label-important" style="display:block"> <strong> Rs.
-                    @if ($coupon_amount_type == 'persantage')
-                        {{ number_format($totalAmount - $totalAmount * ($coupon / 100), 2) }}
+                    @if ($coupon > 0)
+                        @if ($coupon_amount_type == 'persantage')
+                            {{ number_format($totalAmount - $totalAmount * ($coupon / 100), 2) }}
+                            @php
+                                Session::put('grandTotal', $totalAmount - $totalAmount * ($coupon / 100));
+                            @endphp
+                        @else
+                            {{ number_format($totalAmount - $coupon, 2) }}
+                            @php
+                                Session::put('grandTotal', $totalAmount - $coupon);
+                            @endphp
+                        @endif
                     @else
-                        {{ number_format($totalAmount - ( $total_quantity * $coupon), 2) }}
+                      @if(Session::has('grandTotal'))
+                        {{ number_format(Session::get('grandTotal'),2) }}
+                      @else
+                      {{ 0.00 }}
+                      @endif
                     @endif
+
                 </strong></td>
         </tr>
     </tbody>
 </table>
+

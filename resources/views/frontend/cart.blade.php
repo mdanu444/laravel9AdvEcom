@@ -120,9 +120,15 @@
            </tr>
                     </table> -->
         <a href="{{ route('frontend.index') }}" class="btn btn-large"><i class="icon-arrow-left"></i> Continue Shopping </a>
-        <a href="{{ route('frontend.logreg.index') }}" class="btn btn-large pull-right">Next <i
-                class="icon-arrow-right"></i></a>
+        @auth
+        <a href="{{ route('frontend.checkout') }}" class="btn btn-large pull-right">Checkout <i
+            class="icon-arrow-right"></i></a>
+        @endauth
 
+        @guest
+        <a href="{{ route('frontend.logreg.index') }}" class="btn btn-large pull-right">Next Registration<i
+            class="icon-arrow-right"></i></a>
+        @endguest
     </div>
     <script>
 

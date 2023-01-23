@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\ShippingAddresses;
 use App\Models\Cart;
 use App\Models\Sms;
 use App\Models\User;
@@ -190,5 +191,57 @@ class UserController extends Controller
         }else{
             return redirect()->back()->with('error_msg', 'Currnet Password did not matched.');
         }
+    }
+    public function addnewshippingaddress(){
+        {
+            Session::put('pagetitle', 'Shipping Address');
+            return view('frontend.shippingaddress.index');
+        }
+    }
+    public function editshippingaddress($id){
+        $did = Crypt::decryptString($id);
+        $shippingAddress = ShippingAddresses::findOrFail($did);
+        return view('frontend.shippingaddress.edit', ['data' => $shippingAddress]);
+    }
+    public function updateshippingaddress(Request $request, $id){
+        $request->validate([
+            'name' => 'required|regex:^[A-ZÀÂÇÉÈÊËÎÏÔÛÙÜŸÑÆŒa-zàâçéèêëîïôûùüÿñæœ0-9_.,()]+$^',
+            'address' => 'required',
+            'mobile' => 'required|digits:11',
+        ]);
+        $did = Crypt::decryptString($id);
+        $shippingAddress = ShippingAddresses::findOrFail($did);
+        $shippingAddress->name = $request->name;
+        $shippingAddress->address = $request->address;
+        $shippingAddress->mobile = $request->mobile;
+        $shippingAddress->user = Auth::id();
+        if($shippingAddress->save()){
+            return redirect()->back()->with('success_msg', 'Address Updated Successfully !');
+        }
+        return redirect()->back()->with('error_msg', 'Something wrong, please try again !');
+    }
+    public function deleteshippingaddress(Request $request, $id){
+        $did = Crypt::decryptString($id);
+        if(ShippingAddresses::destroy($did)){
+            return redirect()->back()->with('success_msg', 'Address Deleted Successfully !');
+        }
+        return redirect()->back()->with('error_msg', 'Something wrong, please try again !');
+    }
+    public function storeshippingaddress(Request $request){
+        $request->validate([
+            'name' => 'required|regex:^[A-ZÀÂÇÉÈÊËÎÏÔÛÙÜŸÑÆŒa-zàâçéèêëîïôûùüÿñæœ0-9_.,()]+$^',
+            'address' => 'required',
+            'mobile' => 'required|digits:11',
+        ]);
+
+        $shippingAddress = new ShippingAddresses();
+        $shippingAddress->name = $request->name;
+        $shippingAddress->address = $request->address;
+        $shippingAddress->mobile = $request->mobile;
+        $shippingAddress->user = Auth::id();
+        if($shippingAddress->save()){
+            return redirect()->back()->with('success_msg', 'Address Added Successfully !');
+        }
+        return redirect()->back()->with('error_msg', 'Something wrong, please try again !');
     }
 }

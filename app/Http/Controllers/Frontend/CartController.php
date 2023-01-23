@@ -7,6 +7,7 @@ use App\Models\Admin\Coupon;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductsAttribute;
 use App\Models\Cart;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -104,7 +105,7 @@ class CartController extends Controller
 
             if(count($coupon_items) > 0){
 
-                // validation start
+                // coupon validation start
 
                 // status_validation
                 if($coupon_items[0]->status == 0){
@@ -168,7 +169,9 @@ class CartController extends Controller
 
 
 
-                $coupon =$coupon_items[0]->amount;
+                Session::put('coupon_code', $coupon_items[0]->code);
+
+                $coupon = $coupon_items[0]->amount;
                 $coupon_amount_type =$coupon_items[0]->amount_type;
                 $status = true;
                 $message = 'Cart Updated !';
@@ -217,5 +220,16 @@ class CartController extends Controller
         $message = 'Cart Deleted !';
         $html = view('frontend.cart_ajax')->with(['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type])->render();
         return ['html' => $html, 'status' => $status, 'message' => $message];
+    }
+    public function checkout(){
+        $coupon = 0;
+        $coupon_amount_type = "";
+        Session::put('pagetitle', 'Checkout');
+        $cartitems = Cart::getCartItems();
+        $numberOfCartItem = count($cartitems);
+        $shippingaddress = User::shippingaddress();
+        Session::put('numberOfCartItem', $numberOfCartItem);
+        return view('frontend.checkout', ['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type, 'shippingaddress' => $shippingaddress]);
+
     }
 }
