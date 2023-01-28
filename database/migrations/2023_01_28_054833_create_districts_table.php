@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shipping_addresses', function (Blueprint $table) {
+        Schema::create('districts', function (Blueprint $table) {
+            $table->string('bn_name');
+            $table->tinyInteger('division_id');
             $table->id();
-            $table->tinyInteger('user');
+            $table->string('lat')->nullable();
+            $table->string('lon')->nullable();
             $table->string('name');
-            $table->tinyInteger('divisions_id');
-            $table->tinyInteger('districts_id');
-            $table->tinyInteger('upazilas_id');
-            $table->string('address');
-            $table->string('mobile');
+            $table->string('url');
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipping_addresses');
+        Schema::dropIfExists('districts');
     }
 };

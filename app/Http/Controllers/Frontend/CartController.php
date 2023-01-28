@@ -7,6 +7,7 @@ use App\Models\Admin\Coupon;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductsAttribute;
 use App\Models\Cart;
+use App\Models\Division;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Symfony\Component\Finder\Finder;
 
 class CartController extends Controller
 {
@@ -226,9 +228,8 @@ class CartController extends Controller
         $coupon_amount_type = "";
         Session::put('pagetitle', 'Checkout');
         $cartitems = Cart::getCartItems();
-        $numberOfCartItem = count($cartitems);
         $shippingaddress = User::shippingaddress();
-        Session::put('numberOfCartItem', $numberOfCartItem);
+
         return view('frontend.checkout', ['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type, 'shippingaddress' => $shippingaddress]);
 
     }

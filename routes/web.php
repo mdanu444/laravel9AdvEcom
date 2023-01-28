@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressAjaxController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandsController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Frontend\Index;
 use App\Http\Controllers\Frontend\ProductDetails;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Coupon;
@@ -20,10 +22,14 @@ use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductSection;
 use App\Models\Admin\ProductSubCategory;
+use App\Models\District;
+use App\Models\Division;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,6 +80,9 @@ Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->gro
         Route::put('/addnewshippingaddress/{id}', [UserController::class, 'updateshippingaddress'])->name('user.addnewshippingaddress.update');
         Route::get('/addnewshippingaddress/{id}/delete', [UserController::class, 'deleteshippingaddress'])->name('user.addnewshippingaddress.delete');
 
+        Route::get('/orders', [OrderController::class, 'orders'])->name('orders');
+        Route::post('/placeorder', [OrderController::class, 'placeorder'])->name('placeorder');
+
         Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
         Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
         Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
@@ -81,6 +90,8 @@ Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->gro
 
 });
 
+Route::post('/districts', [AddressAjaxController::class, 'districts']);
+Route::post('/upazilas', [AddressAjaxController::class, 'upazilas']);
 
 // for admin panel start from here
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -196,4 +207,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('product/{product}/p_attribute', ProductsAttributeController::class);
         Route::resource('product/{product}/p_image', ProductImageController::class);
     });
+});
+
+Route::get('insertdata', function(){
+    $data = array(
+        array('id' => '1','name' => 'Chattagram','bn_name' => 'চট্টগ্রাম','url' => 'www.chittagongdiv.gov.bd'),
+        array('id' => '2','name' => 'Rajshahi','bn_name' => 'রাজশাহী','url' => 'www.rajshahidiv.gov.bd'),
+        array('id' => '3','name' => 'Khulna','bn_name' => 'খুলনা','url' => 'www.khulnadiv.gov.bd'),
+        array('id' => '4','name' => 'Barisal','bn_name' => 'বরিশাল','url' => 'www.barisaldiv.gov.bd'),
+        array('id' => '5','name' => 'Sylhet','bn_name' => 'সিলেট','url' => 'www.sylhetdiv.gov.bd'),
+        array('id' => '6','name' => 'Dhaka','bn_name' => 'ঢাকা','url' => 'www.dhakadiv.gov.bd'),
+        array('id' => '7','name' => 'Rangpur','bn_name' => 'রংপুর','url' => 'www.rangpurdiv.gov.bd'),
+        array('id' => '8','name' => 'Mymensingh','bn_name' => 'ময়মনসিংহ','url' => 'www.mymensinghdiv.gov.bd')
+      );
+      if(count(Division::all()) < 1){
+          DB::table('divisions')->insert($data);
+      }
+      return $data;
 });

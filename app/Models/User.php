@@ -48,9 +48,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+
     public static function shippingaddress(){
         $userId = Auth::id();
-        $addressess = ShippingAddresses::where('user', $userId)->get();
+        $addressess = ShippingAddresses::where('user', $userId)->with('divisions', 'districts', 'upazilas')->get();
         return  $addressess;
     }
+
 }

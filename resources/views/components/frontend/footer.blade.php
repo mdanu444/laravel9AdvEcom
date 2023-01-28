@@ -47,5 +47,33 @@
     }
 </script>
 </body>
+<script>
+
+    let selections = document.querySelectorAll('.select');
+
+    for(let select of selections){
+       select.addEventListener('change', ()=>{
+        loadSelectionData(event, select);
+       });
+    }
+
+    function loadSelectionData(e,select){
+        let formData = new FormData();
+        formData.append('id', e.target.value);
+        let loadableClass = select.getAttribute('loadableClass');
+        url = window.location.origin + '/' +loadableClass+"s";
+        let loadable = document.querySelector("." + loadableClass);
+        fetch(url, {
+                method: 'post',
+                body: formData,
+                headers:{
+                    "X-CSRF-Token": "{{ csrf_token() }}",
+                }
+            }).then(res => res.json())
+            .then((data) => {
+                loadable.innerHTML = data.html
+            });
+    }
+</script>
 
 </html>

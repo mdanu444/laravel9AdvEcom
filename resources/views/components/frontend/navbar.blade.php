@@ -99,7 +99,7 @@
                                     <input type="text" class="search-query span2" placeholder="Search" />
                                 </form>
                                 <ul class="nav pull-right">
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="{{ route('frontend.orders') }}">Orders</a></li>
                                     <li class="divider-vertical"></li>
                                     @auth
                                         <li><a href="{{ route('frontend.user.account') }}">My Account</a></li>

@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\ShippingAddresses;
 use App\Models\Cart;
+use App\Models\District;
+use App\Models\Division;
 use App\Models\Sms;
+use App\Models\Upazila;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -194,14 +197,18 @@ class UserController extends Controller
     }
     public function addnewshippingaddress(){
         {
+            $divisions = Division::all();
             Session::put('pagetitle', 'Shipping Address');
-            return view('frontend.shippingaddress.index');
+            return view('frontend.shippingaddress.index', ['divisions' => $divisions]);
         }
     }
     public function editshippingaddress($id){
         $did = Crypt::decryptString($id);
         $shippingAddress = ShippingAddresses::findOrFail($did);
-        return view('frontend.shippingaddress.edit', ['data' => $shippingAddress]);
+        $divisions = Division::all();
+        $districts = District::where('division_id', $shippingAddress->divisions_id)->get();
+        $upazilas = Upazila::where('district_id', $shippingAddress->districts_id)->get();
+        return view('frontend.shippingaddress.edit', ['data' => $shippingAddress, 'divisions' => $divisions, 'districts' => $districts, 'upazilas' => $upazilas]);
     }
     public function updateshippingaddress(Request $request, $id){
         $request->validate([
@@ -212,6 +219,9 @@ class UserController extends Controller
         $did = Crypt::decryptString($id);
         $shippingAddress = ShippingAddresses::findOrFail($did);
         $shippingAddress->name = $request->name;
+        $shippingAddress->divisions_id =Crypt::decryptString($request->division_id);
+        $shippingAddress->districts_id = Crypt::decryptString($request->district_id);
+        $shippingAddress->upazilas_id = Crypt::decryptString($request->upazila);
         $shippingAddress->address = $request->address;
         $shippingAddress->mobile = $request->mobile;
         $shippingAddress->user = Auth::id();
@@ -236,6 +246,9 @@ class UserController extends Controller
 
         $shippingAddress = new ShippingAddresses();
         $shippingAddress->name = $request->name;
+        $shippingAddress->divisions_id =Crypt::decryptString($request->division_id);
+        $shippingAddress->districts_id = Crypt::decryptString($request->district_id);
+        $shippingAddress->upazilas_id = Crypt::decryptString($request->upazila);
         $shippingAddress->address = $request->address;
         $shippingAddress->mobile = $request->mobile;
         $shippingAddress->user = Auth::id();

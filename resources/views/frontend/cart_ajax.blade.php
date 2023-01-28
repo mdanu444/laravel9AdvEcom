@@ -56,6 +56,8 @@
                     $grandTotal = $totalAmount - $productDiscount;
                 @endphp
 
+
+
                 <td>Rs.{{ number_format($cartitem->price, 2) }}</td>
                 <td>Rs.{{ number_format($cartitem->price * ($CartProduct['discount'] / 100), 2) }}</td>
                 <td>Rs.{{ number_format($cartitem->quantity * ($cartitem->price - $cartitem->price * ($CartProduct['discount'] / 100)), 2) }}
@@ -114,9 +116,9 @@
                       {{ 0.00 }}
                       @endif
                     @endif
-
                 </strong></td>
         </tr>
     </tbody>
+
 </table>
 
