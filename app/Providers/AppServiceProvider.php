@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(DB::connection()->getPDO() && Schema::hasTable('SiteIdentities')){
+        if(DB::connection()->getPDO() && Schema::hasTable('site_identities')){
         $siteData = SiteIdentity::first();
         $siteTitle = !empty($siteData->title) ? $siteData->title : "Adv. Ecommerce";
         $sitelogo = !empty($siteData->logo) ? $siteData->logo : "dist/img/AdminLTELogo.png";

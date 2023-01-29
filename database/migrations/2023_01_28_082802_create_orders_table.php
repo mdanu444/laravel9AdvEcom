@@ -15,6 +15,16 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('user_id');
+            $table->string('shipping_charge');
+            $table->integer('shipping_address');
+            $table->string('coupon_code');
+            $table->float('coupon_amount');
+            $table->string('order_status');
+            $table->string('payment_method');
+            $table->string('payment_gateway');
+            $table->string('grand_total');
             $table->timestamps();
         });
     }
