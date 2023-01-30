@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
+
     public function orders(){
-        return 'orders';
+        Session::put('pagetitle', 'Orders');
+        $orders = Order::where('user_id', Auth::id())->with('order_items')->orderBy('id', 'desc')->get();
+        return view('frontend.order', ['orders' => $orders]);
     }
 
     // store order details
@@ -24,6 +27,11 @@ class OrderController extends Controller
             'payment_method' => 'required'
         ]);
         $cartItems = Cart::getCartItems();
+
+        // check cart item has or not
+        if(count($cartItems) < 1){
+            return redirect()->back()->with('error_msg', "You do not have checkout any product !");
+        }
         $shipping_address_id = Crypt::decryptString($request->address);
         $payment_method = $request->payment_method;
 
@@ -57,11 +65,13 @@ class OrderController extends Controller
                 $orderItem->order_id = $order->id;
                 $orderItem->user_id = Auth::id();
                 $orderItem->product_id = $item->products_id;
-                $orderItem->product_code = $item->product->code;
+
+
+                $attribute = ProductsAttribute::find($item->attributes_id);
+                $orderItem->product_code = $attribute->sku;
                 $orderItem->product_name = $item->product->title;
                 $orderItem->product_color = $item->product->color;
 
-                $attribute = ProductsAttribute::find($item->attributes_id);
 
                 $orderItem->product_size = $attribute->size;
                 $orderItem->product_price = $item->price;

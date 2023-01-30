@@ -107,15 +107,14 @@
                         @else
                             {{ number_format($totalAmount - $coupon, 2) }}
                             @php
-                                Session::put('grandTotal', $totalAmount - $coupon);
+                                Session::put('grandTotal', ($totalAmount - $coupon));
                             @endphp
                         @endif
                     @else
-                      @if(Session::has('grandTotal'))
-                        {{ number_format(Session::get('grandTotal'),2) }}
-                      @else
-                      {{ 0.00 }}
-                      @endif
+                    {{ number_format($totalAmount - $coupon, 2) }}
+                    @php
+                        Session::put('grandTotal', ($totalAmount - $coupon));
+                    @endphp
                     @endif
                 </strong></td>
         </tr>

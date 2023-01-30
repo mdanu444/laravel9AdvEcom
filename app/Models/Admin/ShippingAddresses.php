@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 use App\Models\District;
 use App\Models\Division;
+use App\Models\Order;
 use App\Models\Upazila;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,4 +24,8 @@ class ShippingAddresses extends Model
     public function upazilas(){
         return $this->belongsTo(Upazila::class)->select('id', 'name');
     }
+    public function orders(){
+        return $this->hasOne(Order::class);
+    }
+
 }

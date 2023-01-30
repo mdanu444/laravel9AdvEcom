@@ -16,6 +16,7 @@ use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\InsertDataController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Coupon;
@@ -82,6 +83,7 @@ Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->gro
         Route::get('/addnewshippingaddress/{id}/delete', [UserController::class, 'deleteshippingaddress'])->name('user.addnewshippingaddress.delete');
 
         Route::get('/orders', [OrderController::class, 'orders'])->name('orders');
+        Route::get('/orderdetails/{id}', [OrderItemController::class, 'orderdetails'])->name('orderdetails');
         Route::post('/placeorder', [OrderController::class, 'placeorder'])->name('placeorder');
 
         Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
