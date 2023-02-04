@@ -1,6 +1,6 @@
 <x-admin.header />
 
-<body onload="activer()" class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed">
 
 
 
@@ -55,29 +55,12 @@
                     let myCustomAlert = document.getElementById('myCustomAlert');
                     myCustomAlert.style.display = 'none';
                 }
-                setTimeout(hiddable, 5000);
+
             </script>
 
 
 
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">
-                                @if (Session::has('pageTitle'))
-                                    {{ Session::get('pageTitle') }}
-                                @endif
-                            </h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                {{--  @yield('pagename')  --}}
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
+<div class="p-2"></div>
             <!-- /.content-header -->
             <!-- Main content -->
             <section class="content">

@@ -63,4 +63,9 @@ class ProductsAttributeController extends Controller
         ProductsAttribute::destroy($did);
         return redirect()->route('admin.p_attribute.index', $product)->with('message', "Attribute Deleted Successfull!");
     }
+
+    public function update(Request $request)
+    {
+        return "product";
+    }
 }

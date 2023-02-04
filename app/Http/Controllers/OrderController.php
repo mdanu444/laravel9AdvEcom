@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin\OrderStatus;
+use App\Models\Admin\OrderStatusLog;
 use App\Models\Admin\ProductsAttribute;
 use App\Models\Cart;
 use App\Models\Order;
@@ -54,7 +56,7 @@ class OrderController extends Controller
         $order->shipping_address = $shipping_address_id;
         $order->coupon_code = $coupon_code;
         $order->coupon_amount = $coupon_amount;
-        $order->order_status = 'New';
+        $order->order_status = 'New Order';
         $order->payment_method = $payment_method;
         $order->payment_gateway = $payment_gateway;
         $order->grand_total = $grandTotal;
@@ -80,6 +82,9 @@ class OrderController extends Controller
                     Cart::destroy($item->id);
                     $attribute->stock = $attribute->stock - $item->quantity;
                     $attribute->save();
+                    $orderStatusLog = new OrderStatusLog();
+                    $orderStatusLog->orders_id =$order->id;
+                    $orderStatusLog->status ="New Order";
                 }
             }
             Session::forget('coupon_code');
@@ -89,5 +94,62 @@ class OrderController extends Controller
             return redirect()->back()->with('success_msg', 'Your order id is # '.$order->id.'. Please stay with us, Thank you !');
         }
         return redirect()->back()->with('error_msg', 'Something error, Please try again !');
+    }
+
+    // admin order list show
+    public function adminorder(){
+        Session::put('pageTitle', 'Product');
+        Session::put('activer', 'Order List');
+        $orders = Order::with('users')->get();
+        return view('admin.product.order.index', ['data' => $orders]);
+    }
+    public function adminorderdetails($id){
+        Session::put('pageTitle', 'Product');
+        Session::put('activer', 'Order List');
+        $orders = Order::with('users', 'order_items', 'shipping')->findOrFail($id);
+        $statuses = OrderStatus::where('status', 1)->orderBy('order_number', 'asc')->get();
+        $statuslogs = OrderStatusLog::where('orders_id', $id)->orderBy('id', 'desc')->get();
+        $previouslogs = count($statuslogs) > 1 ? $statuslogs[1]->status :  'None';
+        $updatedLogsArray = OrderStatusLog::where('orders_id', $id)->select('status')->get();
+        $logsArray = Array();
+        foreach($updatedLogsArray as $log){
+            $logsArray[] = $log->status;
+        }
+        $logsArray;
+        // order item has product and product has image
+        return view('admin.product.order.show', ['data' => $orders, 'statuses' => $statuses, 'statuslogs' => $statuslogs, 'previouslog' => $previouslogs, 'updatedLogsArray' => $logsArray]);
+    }
+
+    public function updateorderstatus(Request $request, $id){
+        $request->validate(['order_status' => "required"]);
+        if($request->order_status == "Shipped"){
+            $request->validate([
+                'courier_name' => 'required',
+                'tracking_number' => 'required',
+                'shipping_charge' => 'required'
+            ],[
+                'courier_name' => 'Courier Name is required!',
+                'tracking_number' => 'Tracking Numbe is required!',
+                'shipping_charge' => 'Shipping Charge is required!'
+            ]);
+        }
+        $order = Order::findOrFail($id);
+        $order->order_status = $request->order_status;
+        $order->courier_name = $request->courier_name;
+        $order->tracking_number = $request->tracking_number;
+        $order->shipping_charge = $request->shipping_charge;
+        if($order->save()){
+
+        // validated already this update done or not
+        $oldOrderStatusLog = OrderStatusLog::where('orders_id', $id)->where('status', $request->order_status)->get();
+        if(count($oldOrderStatusLog) == 0){
+            $log = new OrderStatusLog();
+            $log->orders_id = $id;
+            $log->status = $request->order_status;
+            $log->save();
+            return redirect()->back()->with('message', 'Order Updated !');
+        }
+        }
+        return redirect()->back()->with('message', 'Order does not update, please try again !');
     }
 }

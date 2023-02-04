@@ -17,9 +17,11 @@ use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\InsertDataController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Coupon;
+use App\Models\Admin\OrderStatus;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductCategory;
 use App\Models\Admin\ProductSection;
@@ -132,6 +134,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 $item->save();
                 return ['status' => true];
             }
+            if ($request->status == "order_status") {
+                $item = OrderStatus::findOrfail($request->id);
+                if ($item->status == 1) {
+                    $item->status = 0;
+                } else {
+                    $item->status = 1;
+                }
+                $item->save();
+                return ['status' => true];
+            }
             if ($request->status == "productsubcategory") {
                 $item = ProductSubCategory::findOrfail($request->id);
                 if ($item->status == 1) {
@@ -209,6 +221,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/getsubcategorybysection', [ProductController::class, 'getsubcategorybysection'])->name('getsubcategorybysection');
         Route::resource('product/{product}/p_attribute', ProductsAttributeController::class);
         Route::resource('product/{product}/p_image', ProductImageController::class);
+        Route::get('/orders', [OrderController::class, 'adminorder'])->name('adminorder');
+        Route::get('/orders/{id}', [OrderController::class, 'adminorderdetails'])->name('adminorderdetails');
+        Route::put('/updateorderstatus/{id}', [OrderController::class, 'updateorderstatus'])->name('updateorderstatus');
+        Route::resource('/order_status', OrderStatusController::class);
+        Route::post('/updateStatusOrder', [OrderStatusController::class, 'updateStatusOrder']);
     });
 });
 

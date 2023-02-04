@@ -128,6 +128,13 @@
                                 <p>Coupons </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.order_status.index') }}"
+                                class="nav-link  {{ Session::get('activer') == 'Order Status' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Order Status </p>
+                            </a>
+                        </li>
                     </ul>
                 <li class="nav-item {{ Session::get('pageTitle') == 'Product' ? 'menu-open ' : '' }}">
                     <a href="" class=" nav-link {{ Session::get('pageTitle') == 'Product' ? 'active ' : '' }}">
@@ -143,6 +150,13 @@
                                 class="nav-link {{ Session::get('activer') == 'Product List' ? 'active ' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Product List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.adminorder') }}"
+                                class="nav-link {{ Session::get('activer') == 'Order List' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Order List</p>
                             </a>
                         </li>
                     </ul>

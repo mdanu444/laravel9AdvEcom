@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('user_id');
-            $table->string('shipping_charge');
+            $table->string('shipping_charge')->nullable();
             $table->integer('shipping_address');
             $table->string('coupon_code');
             $table->float('coupon_amount');

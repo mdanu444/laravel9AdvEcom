@@ -53,12 +53,12 @@
         <div class="container"  style="width: 100% !important; display: flex; box-sizing: border-box;">
             <div class="fifty">
                 <div class="card">
-                    <div class="card-header">Delivery Details</div>
+                    <div class="card-header">Order Details</div>
                     <div class="card-body">
                         <table class="table table-bordered">
                             <tr>
                                 <td>Order Date</td>
-                                <td>{{ $order->created_at }}</td>
+                                <td>{{ date_format($order->created_at, 'dS F, Y - h:i A ') }}</td>
                             </tr>
                             <tr>
                                 <td>Order Status</td>
@@ -71,6 +71,14 @@
                             <tr>
                                 <td>Shipping Charge</td>
                                 <td>{{ $order->shipping_charge }}</td>
+                            </tr>
+                            <tr>
+                                <td>Courier Name</td>
+                                <td>{{ $order->courier_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Tracking Number</td>
+                                <td>{{ $order->tracking_number }}</td>
                             </tr>
                             <tr>
                                 <td>Coupon Code</td>
@@ -126,7 +134,7 @@
         </div>
         <div  style="padding: 10px;">
             <div class="card">
-                <div class="card-header">Order Items</div>
+                <div class="card-header">Order Product Items</div>
                 <div class="card-body">
                     <table class="table table-bordered">
                         <tr>
@@ -135,7 +143,7 @@
                             <th>Product Name</th>
                             <th>Product Size</th>
                             <th>Product Color</th>
-                            <th>Product Qty</th>
+                            <th>Order Qty</th>
                         </tr>
                         @foreach ($order->order_items as $item)
                             <tr>

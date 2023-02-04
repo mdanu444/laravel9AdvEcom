@@ -17,4 +17,8 @@ class Order extends Model
     public function shipping(){
         return $this->belongsTo(ShippingAddresses::class,'shipping_address', 'id')->with('districts', 'divisions', 'upazilas');
     }
+
+    public function users(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

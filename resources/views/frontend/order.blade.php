@@ -47,6 +47,7 @@
                         <th>Coupon Discount</th>
                         <th>Grand Total</th>
                         <th>Status</th>
+                        <th>Order Date</th>
                         <th>Action</th>
                     </tr>
                 </div>
@@ -63,6 +64,7 @@
                             <td>{{ number_format(($order->coupon_amount),2) }}</td>
                             <td>{{ number_format($order->grand_total,2) }}</td>
                             <td>{{ $order->order_status }}</td>
+                            <td>{{ date_format($order->created_at, 'd F, Y') }}</td>
                             <td >
                                 <a class="orderid" href="{{ route('frontend.orderdetails', ['id' => Crypt::encryptString($order->id)]) }}">
                                     Show Details
