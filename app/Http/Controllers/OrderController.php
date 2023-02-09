@@ -8,6 +8,7 @@ use App\Models\Admin\ProductsAttribute;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -99,9 +100,9 @@ class OrderController extends Controller
             Session::forget('grandTotal');
             Session::forget('numberOfCartItem');
 
-
-            Mail::send('email.order', ['order' => $order], function ($message) {
-                $message->to(Auth::user()->email, 'Order Confirmation');
+            $email = Auth::user()->email;
+            Mail::send('email.neworder', ['order' => $order], function ($message) use($email){
+                $message->to($email)->subject('Order Confirmation');
             });
 
 
@@ -159,22 +160,25 @@ class OrderController extends Controller
 
             // validated already this update done or not
             $oldOrderStatusLog = OrderStatusLog::where('orders_id', $id)->where('status', $request->order_status)->get();
+            $user=User::find($order->user_id);
+            $email = $user->email;
             if (count($oldOrderStatusLog) == 0) {
                 $log = new OrderStatusLog();
                 $log->orders_id = $id;
                 $log->status = $request->order_status;
                 $log->save();
-                Mail::send('email.order', ['order' => $order], function ($message) {
-                    $message->to(Auth::user()->email, 'Order Confirmation');
+                Mail::send('email.orderStatus', ['order' => $order, 'user' => $user], function ($message) use($email) {
+                    $message->to($email)->subject('Order Status');
                 });
                 return redirect()->back()->with('message', 'Order Updated !');
             } else {
                 $log = OrderStatusLog::where('orders_id', $id)->where('status', $request->order_status)->first();
                 $log->updated_at = now();
                 $log->save();
-                Mail::send('email.order', ['order' => $order], function ($message) {
-                    $message->to(Auth::user()->email, 'Order Confirmation');
+                Mail::send('email.orderStatus', ['order' => $order, 'user' => $user], function ($message) use($email) {
+                    $message->to($email)->subject('Order Status');
                 });
+
                 return redirect()->back()->with('message', 'Order Updated !');
             }
             return redirect()->back()->with('message', 'Order does not update, please try again !');
