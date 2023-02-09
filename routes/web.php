@@ -229,4 +229,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+Route::get('orderinvoice/{id}', [OrderController::class, 'orderinvoicePrint'])->name('orderinvoicePrint');
+Route::get('orderinvoice/{id}/download', [OrderController::class, 'orderinvoiceDownload'])->name('orderinvoiceDownload');
+
 Route::get('insertdata', [InsertDataController::class, 'insertData']);

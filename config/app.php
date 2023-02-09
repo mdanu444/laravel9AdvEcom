@@ -183,8 +183,9 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
-         * Package Service Providers...
-         */
+        * Package Service Providers...
+        */
+        Milon\Barcode\BarcodeServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -212,6 +213,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         // 'Image' => Intervention\Image\Facades\Image::class,
+        'DNS1D' => 'Milon\Barcode\Facades\DNS1DFacade',
+        'DNS2D' => 'Milon\Barcode\Facades\DNS2DFacade',
     ])->toArray(),
 
 ];

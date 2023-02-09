@@ -93,9 +93,7 @@
                                 <select class="form-control" name="order_status" id="order_status">
                                     <option value="">Status</option>
                                     @foreach ($statuses as $status)
-                                        @if (!in_array($status->title, $updatedLogsArray))
                                             <option value="{{ $status->title }}">{{ $status->title }}</option>
-                                        @endif
                                     @endforeach
                                 </select>
                             </div>

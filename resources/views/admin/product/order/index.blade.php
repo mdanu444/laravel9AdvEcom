@@ -28,7 +28,13 @@
                             <td>{{ number_format($item->coupon_amount, 2) }}</td>
                             <td>{{ number_format($item->grand_total,2) }}</td>
                             <td>{{ $item->order_status }}</td>
-                            <td><a href="{{ route('admin.adminorderdetails',['id' => $item->id]) }}">Details</a></td>
+                            <td>
+                                <a title="View Order Details" href="{{ route('admin.adminorderdetails',['id' => $item->id]) }}"><i class="fa fa-file"></i></a>
+                                @if (($item->order_status == "Shipped") || ($item->order_status == "Delivered"))
+                                <a title="Print Order Details" href="{{ route('orderinvoicePrint',['id' => Crypt::encryptString($item->id)]) }}"><i class="fa fa-print"></i></a>
+                                <a title="Download Order Details" href="{{ route('orderinvoiceDownload',['id' => Crypt::encryptString($item->id)]) }}"><i class="fa fa-file-pdf"></i></a>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
 
