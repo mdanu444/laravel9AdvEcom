@@ -147,7 +147,9 @@ class CouponController extends Controller
             'amount_type' => 'required',
             'amount' => "required|integer",
         ]);
-
+        if($request->option == 'manual'){
+            $code = $request->code;
+        }
         if($request->option == 'manual'){
             $code = $request->code;
         }

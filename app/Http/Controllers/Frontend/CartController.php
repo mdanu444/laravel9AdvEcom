@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\Coupon;
 use App\Models\Admin\Product;
 use App\Models\Admin\ProductsAttribute;
+use App\Models\Admin\ShippingAddresses;
 use App\Models\Cart;
 use App\Models\Division;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,35 +104,44 @@ class CartController extends Controller
     {
         $coupon = 0;
         $coupon_amount_type = "";
-        if(isset($request->code) && !empty($request->code)){
+        if (isset($request->code) && !empty($request->code)) {
             $coupon_items = Coupon::where('code', $request->code)->get();
 
-            if(count($coupon_items) > 0){
+            if (count($coupon_items) > 0) {
 
                 // coupon validation start
 
                 // status_validation
-                if($coupon_items[0]->status == 0){
+                if ($coupon_items[0]->status == 0) {
                     $status = false;
                     $message = 'Coupon disabled !';
                     return  ['status' => $status, 'message' => $message];
                 }
                 // expiry_validation
-                if($coupon_items[0]->status == 1){
+                if ($coupon_items[0]->status == 1) {
                     // expiry date should bigger then now
                     $expiry_date = $coupon_items[0]->expiry_date;
                     $current_date = date('Y-m-d');
-                    if($expiry_date < $current_date){
+                    if ($expiry_date < $current_date) {
                         $status = false;
                         $message = 'Coupon Expired !';
                         return  ['status' => $status, 'message' => $message];
                     }
                 }
+                // single coupone already used or not
+                if ($coupon_items[0]->coupon_type == "single") {
+                    $useedTimes = Order::where('coupon_code', $coupon_items[0]->code)->get()->count();
+                    if ($useedTimes > 0) {
+                        $status = false;
+                        $message = 'Coupon Already Used !';
+                        return  ['status' => $status, 'message' => $message];
+                    }
+                }
                 // user_validation
-                if($coupon_items[0]->status == 1){
+                if ($coupon_items[0]->status == 1) {
                     $coupone_users_array = Coupon::getStrToArr($coupon_items[0]->users);
 
-                    if(!in_array(Auth::id(), $coupone_users_array)){
+                    if (!in_array(Auth::id(), $coupone_users_array)) {
                         $status = false;
                         $message = 'This coupone created for enother user !';
                         return  ['status' => $status, 'message' => $message];
@@ -138,13 +149,13 @@ class CartController extends Controller
                 }
 
                 // category_validation
-                if($coupon_items[0]->status == 1){
+                if ($coupon_items[0]->status == 1) {
                     $categories = Coupon::getStrToArr($coupon_items[0]->categories);
                     $subcategories = Coupon::getStrToArr($coupon_items[0]->subcategories);
                     $cartitems = Cart::getCartItems();
-                    foreach($cartitems as $cart){
+                    foreach ($cartitems as $cart) {
                         $category_id = $cart->product->product_categories_id;
-                        if(!in_array($category_id,$categories)){
+                        if (!in_array($category_id, $categories)) {
                             $status = false;
                             $message = 'This coupon is not for one of selected products !';
                             return  ['status' => $status, 'message' => $message];
@@ -152,13 +163,13 @@ class CartController extends Controller
                     }
                 }
                 // subcategory_validation
-                if($coupon_items[0]->status == 1){
+                if ($coupon_items[0]->status == 1) {
                     $subcategories = Coupon::getStrToArr($coupon_items[0]->subcategories);
                     $cartitems = Cart::getCartItems();
-                    foreach($cartitems as $cart){
+                    foreach ($cartitems as $cart) {
                         $subcategory_id = $cart->product->product_sub_categories_id;
-                        if($subcategory_id != 0){
-                            if(!in_array($subcategory_id,$subcategories)){
+                        if ($subcategory_id != 0) {
+                            if (!in_array($subcategory_id, $subcategories)) {
                                 $status = false;
                                 $message = 'This coupon is not for one of selected products !';
                                 return  ['status' => $status, 'message' => $message];
@@ -174,13 +185,13 @@ class CartController extends Controller
                 Session::put('coupon_code', $coupon_items[0]->code);
 
                 $coupon = $coupon_items[0]->amount;
-                $coupon_amount_type =$coupon_items[0]->amount_type;
+                $coupon_amount_type = $coupon_items[0]->amount_type;
                 $status = true;
                 $message = 'Cart Updated !';
                 $cartitems = Cart::getCartItems();
                 $html = view('frontend.cart_ajax')->with(['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type])->render();
                 return ['html' => $html, 'status' => $status, 'message' => $message];
-            }else{
+            } else {
                 $status = false;
                 $message = 'Coupon not found !';
                 $cartitems = Cart::getCartItems();
@@ -223,14 +234,33 @@ class CartController extends Controller
         $html = view('frontend.cart_ajax')->with(['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type])->render();
         return ['html' => $html, 'status' => $status, 'message' => $message];
     }
-    public function checkout(){
+    public function checkout()
+    {
         $coupon = 0;
         $coupon_amount_type = "";
         Session::put('pagetitle', 'Checkout');
         $cartitems = Cart::getCartItems();
         $shippingaddress = User::shippingaddress();
-
+        $shippingCharge = 0;
+        Session::put('shipping_charge', $shippingCharge);
         return view('frontend.checkout', ['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type, 'shippingaddress' => $shippingaddress]);
-
+    }
+    public function UpdateCheckout(Request $request)
+    {
+        $addressId = $request->district;
+        $district = ShippingAddresses::find($addressId)->districts_id;
+        if ($district != null) {
+            $coupon = 0;
+            $coupon_amount_type = "";
+            $cartitems = Cart::getCartItems();
+            $shippingaddress = User::shippingaddress();
+            $cartWeight = Cart::getCartWeight();
+            $shippingCharge = ShippingAddresses::getShippingCharge($cartWeight, $district);
+            Session::put('shipping_charge', $shippingCharge);
+            $view = View::make('frontend.ajax_checkout')->with(['cartitems' => $cartitems, 'coupon' => $coupon, 'coupon_amount_type' => $coupon_amount_type, 'shippingaddress' => $shippingaddress])->render();
+            $status = true;
+            return ['html' => $view, 'status' => $status];
+        }
+        return ['html' => "", 'status' => false];
     }
 }

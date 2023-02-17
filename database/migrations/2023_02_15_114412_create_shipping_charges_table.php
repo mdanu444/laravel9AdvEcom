@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shipping_addresses', function (Blueprint $table) {
+        Schema::create('shipping_charges', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('user');
-            $table->string('name');
-            $table->bigInteger('divisions_id');
-            $table->bigInteger('districts_id');
-            $table->bigInteger('upazilas_id')->nullable();
-            $table->string('address');
-            $table->string('mobile');
+            $table->foreignId('districts_id');
+            $table->float('weight_0_500g');
+            $table->float('weight_501_1000g');
+            $table->float('weight_1001_2000g');
+            $table->float('weight_2001_5000g');
+            $table->float('weight_5001g_above');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipping_addresses');
+        Schema::dropIfExists('shipping_charges');
     }
 };

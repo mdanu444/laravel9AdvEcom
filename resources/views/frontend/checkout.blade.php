@@ -1,6 +1,4 @@
-@php
-    use App\Models\Cart;
-@endphp
+
 
 @extends('frontend.master')
 @section('mainbody')
@@ -119,7 +117,7 @@
                         @foreach ($shippingaddress as $address)
                             <tr>
                                 <td style="width: 80%">
-                                    <label>
+                                    <label class="shippingaddress" data="{{ $address->id }}">
                                         <input style="margin-top: -2px;" type="radio" name="address"
                                             value="{{ Crypt::encryptString($address->id) }}" id="">
                                         {{ $address->address }}
@@ -145,86 +143,9 @@
             </div>
             <br>
 
-            <div id="cartLoadable">
+            <div id="cartLoadable" >
 
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Description</th>
-                            <th>Quantity/Update</th>
-                            <th>Price <br>Per Unit</th>
-                            <th>Discount <br> Per Unit</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $totalAmount = 0;
-                            $total_quantity = 0;
-                            $productDiscount = 0;
-                            $grandTotal = 0;
-                        @endphp
-                        @foreach ($cartitems as $cartitem)
-                            @php
-                                // product attribute discount
-                                $total_quantity += $cartitem->quantity;
-                                $CartProduct = Cart::getCartProducts($cartitem->products_id, $cartitem->attributes_id);
-                            @endphp
-                            <tr>
-                                <td> <img width="60"
-                                        src="{{ url('images/product_image/small/' . $CartProduct['product']->image) }}"
-                                        alt="" /></td>
-                                <td>{{ $CartProduct['product']->title }}({{ $CartProduct['attribute']->sku }})<br />Color
-                                    :
-                                    {{ $CartProduct['product']->color }}
-                                    <br>Size : {{ $CartProduct['attribute']->size }}
-                                </td>
-                                <td>
-                                    {{ $cartitem->quantity }}
-                                </td>
-                                @php
-                                    $totalAmount += $cartitem->quantity * ($cartitem->price - $cartitem->price * ($CartProduct['discount'] / 100));
-                                    $productDiscount = $cartitem->price * ($CartProduct['discount'] / 100);
-                                    $grandTotal = $totalAmount - $productDiscount;
-                                @endphp
-
-                                <td>Rs.{{ number_format($cartitem->price, 2) }}</td>
-                                <td>Rs.{{ number_format($cartitem->price * ($CartProduct['discount'] / 100), 2) }}</td>
-                                <td>Rs.{{ number_format($cartitem->quantity * ($cartitem->price - $cartitem->price * ($CartProduct['discount'] / 100)), 2) }}
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        <tr>
-                            <td colspan="5" style="text-align:right">Total Price: </td>
-                            <td> Rs. {{ number_format($totalAmount, 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="5" style="text-align:right">Coupon Discount: </td>
-                            <td> Rs.
-                                @if (Session::has('coupon_amount'))
-                                    {{ number_format(Session::get('coupon_amount'), 2) }}
-                                @else
-                                    {{ number_format(0, 2) }}
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="5" style="text-align:right"><strong>GRAND TOTAL (Total Price - Coupon Discount)
-                                    =</strong>
-                            </td>
-                            <td class="label label-important" style="display:block"> <strong> Rs.
-                                    @if (Session::has('grandTotal'))
-                                        {{ number_format(Session::get('grandTotal'), 2) }}
-                                    @else
-                                        {{ number_format(0, 2) }}
-                                    @endif
-
-                                </strong></td>
-                        </tr>
-                    </tbody>
-                </table>
+            @include('frontend.ajax_checkout')
             </div>
             <div style="padding: 10px; border-radius: 5px; border: 1px solid lightgray;">
                 <h4>Payment Option</h4>
@@ -249,4 +170,35 @@
             <button type="submit" class="btn btn-large pull-right">Place Order <i class="icon-arrow-right"></i></button>
     </div>
     </form>
+    <script>
+        let cartLoadable = document.querySelector('#cartLoadable');
+        let addressess = document.querySelectorAll('.shippingaddress');
+        for(let address of addressess){
+            address.addEventListener('click', ()=>{
+                let id = address.getAttribute('data');
+                let url = "{{ route('frontend.UpdateCheckout') }}";
+                formData = new FormData();
+                formData.append('district', id);
+                fetch(url, {
+                    headers:{
+                        "X-CSRF-Token": "{{ csrf_token() }}",
+                    },
+                    method: 'post',
+                    body: formData
+                }).then(res => res.json())
+                .then(data =>{
+                    {{--  console.log(data)
+                    return;  --}}
+                    loading();
+                    if(data.status == true){
+                        cartLoadable.innerHTML = data.html;
+                    }else{
+                        alert(data.message)
+                    }
+                });
+                loading();
+                return 0;
+            });
+        }
+    </script>
 @endsection

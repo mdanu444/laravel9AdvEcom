@@ -35,22 +35,32 @@
                 <td style="border: 1px solid lightgray; padding: 10px;">{{ $order->payment_method }}</td>
             </tr>
             <tr>
-
-                <td style="border: 1px solid lightgray; padding: 10px;">Coupon Amount</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">Sub Total</td>
                 <td style="border: 1px solid lightgray; padding: 10px;">:</td>
-                <td style="border: 1px solid lightgray; padding: 10px;">{{ $order->coupon_amount }}</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">{{ number_format($order->grand_total + $order->coupon_amount - $order->shipping_charge,2) }}</td>
             </tr>
             <tr>
 
+                <td style="border: 1px solid lightgray; padding: 10px;">Coupon Amount</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">:</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">({{ number_format($order->coupon_amount,2) }})</td>
+            </tr>
+            <tr>
+
+                <td style="border: 1px solid lightgray; padding: 10px;">Shipping Charge</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">:</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">{{ number_format($order->shipping_charge,2) }}</td>
+            </tr>
+            <tr>
                 <td style="border: 1px solid lightgray; padding: 10px;">Grand Total</td>
                 <td style="border: 1px solid lightgray; padding: 10px;">:</td>
-                <td style="border: 1px solid lightgray; padding: 10px;">{{ $order->grand_total }}</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">{{ number_format($order->grand_total,2  ) }}</td>
             </tr>
             <tr>
 
                 <td style="border: 1px solid lightgray; padding: 10px;">Order Date</td>
                 <td style="border: 1px solid lightgray; padding: 10px;">:</td>
-                <td style="border: 1px solid lightgray; padding: 10px;">{{ $order->created_at }}</td>
+                <td style="border: 1px solid lightgray; padding: 10px;">{{ date_format($order->created_at,"dS F, Y") }}</td>
             </tr>
         </table>
         <br>

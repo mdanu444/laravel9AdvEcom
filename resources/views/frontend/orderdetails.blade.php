@@ -66,27 +66,31 @@
                             </tr>
                             <tr>
                                 <td>Order Total</td>
-                                <td>{{ $order->grand_total }}</td>
-                            </tr>
-                            <tr>
-                                <td>Shipping Charge</td>
-                                <td>{{ $order->shipping_charge }}</td>
-                            </tr>
-                            <tr>
-                                <td>Courier Name</td>
-                                <td>{{ $order->courier_name }}</td>
-                            </tr>
-                            <tr>
-                                <td>Tracking Number</td>
-                                <td>{{ $order->tracking_number }}</td>
-                            </tr>
-                            <tr>
-                                <td>Coupon Code</td>
-                                <td>{{ $order->coupon_code }}</td>
+                                <td>{{ number_format((($order->grand_total + $order->coupon_amount) - $order->shipping_charge),2) }}</td>
                             </tr>
                             <tr>
                                 <td>Coupon Amount</td>
-                                <td>{{ $order->coupon_amount }}</td>
+                                <td>{{ number_format($order->coupon_amount ,2)}}</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping Charge</td>
+                                <td>{{ number_format($order->shipping_charge,2) }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong> Grand Total</strong></td>
+                                <td><strong> {{ number_format($order->grand_total,2) }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Coupon Code</td>
+                                <td>{{ $order->coupon_code == 0 ? "-":$order->coupon_code }}</td>
+                            </tr>
+                            <tr>
+                                <td>Courier Name</td>
+                                <td>{{ !empty($order->courier_name) ? $order->courier_name : "-" }}</td>
+                            </tr>
+                            <tr>
+                                <td>Tracking Number</td>
+                                <td>{{ !empty($order->tracking_number) ? $order->tracking_number : "-" }}</td>
                             </tr>
                             <tr>
                                 <td>Payment Method</td>

@@ -12,8 +12,9 @@
                     <tr>
                         <th>Order Id</th>
                         <th>Order By</th>
-                        <th>Order Amount</th>
-                        <th>Coupon Amount</th>
+                        <th>Sub Total</th>
+                        <th>Shipping <br>Charge</th>
+                        <th>Coupon <br> Amount</th>
                         <th>Grand Total</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -24,9 +25,10 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->users->email }}</td>
-                            <td>{{ number_format($item->grand_total + $item->coupon_amount, 2) }}</td>
-                            <td>{{ number_format($item->coupon_amount, 2) }}</td>
-                            <td>{{ number_format($item->grand_total,2) }}</td>
+                            <td>{{ number_format(($item->grand_total + $item->coupon_amount) - $item->shipping_charge, 2) }}</td>
+                            <td>{{ number_format($item->shipping_charge, 2) }}</td>
+                            <td>({{ number_format($item->coupon_amount, 2) }})</td>
+                            <td><strong>{{ number_format($item->grand_total,2) }}</strong></td>
                             <td>{{ $item->order_status }}</td>
                             <td>
                                 <a title="View Order Details" href="{{ route('admin.adminorderdetails',['id' => $item->id]) }}"><i class="fa fa-file"></i></a>
@@ -43,8 +45,9 @@
                     <tr>
                         <th>Order Id</th>
                         <th>Order By</th>
-                        <th>Order Amount</th>
-                        <th>Coupon Amount</th>
+                        <th>Sub Total</th>
+                        <th>Shipping <br>Charge</th>
+                        <th>Coupon <br> Amount</th>
                         <th>Grand Total</th>
                         <th>Status</th>
                         <th>Action</th>

@@ -88,6 +88,9 @@
                 @else
                     @if(Session::has('coupon_amount'))
                       {{ number_format(Session::get('coupon_amount'),2) }}
+                      @php
+                        $coupon = Session::get('coupon_amount');
+                      @endphp
                     @else
                      {{ 0.00 }}
                     @endif

@@ -19,6 +19,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ShippingChargeController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Coupon;
 use App\Models\Admin\OrderStatus;
@@ -91,6 +92,7 @@ Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->gro
         Route::post('/checkpass', [UserController::class, 'checkpass'])->name('user.checkpass');
         Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
         Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+        Route::post('/Updatecheckout', [CartController::class, 'UpdateCheckout'])->name('UpdateCheckout');
     });
 
 });
@@ -226,10 +228,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/updateorderstatus/{id}', [OrderController::class, 'updateorderstatus'])->name('updateorderstatus');
         Route::resource('/order_status', OrderStatusController::class);
         Route::post('/updateStatusOrder', [OrderStatusController::class, 'updateStatusOrder']);
+        Route::get('/shippingcharge', [ShippingChargeController::class, 'index'])->name('shippingcharge.index');
+        Route::get('/shippingcharge/{id}/edit', [ShippingChargeController::class, 'edit'])->name('shippingcharge.edit');
+        Route::put('/shippingcharge/{id}', [ShippingChargeController::class, 'update'])->name('shippingcharge.update');
     });
 });
 
 Route::get('orderinvoice/{id}', [OrderController::class, 'orderinvoicePrint'])->name('orderinvoicePrint');
 Route::get('orderinvoice/{id}/download', [OrderController::class, 'orderinvoiceDownload'])->name('orderinvoiceDownload');
 
-Route::get('insertdata', [InsertDataController::class, 'insertData']);
+// Route::get('insertdata', [InsertDataController::class, 'insertData']);
+// Route::get('insertShippingCharge', [ShippingChargeController::class, 'store']);

@@ -129,6 +129,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('admin.shippingcharge.index') }}"
+                                class="nav-link  {{ Session::get('activer') == 'Shipping Charge' ? 'active ' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Shipping Charge</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('admin.order_status.index') }}"
                                 class="nav-link  {{ Session::get('activer') == 'Order Status' ? 'active ' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>

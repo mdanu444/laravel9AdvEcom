@@ -14,27 +14,27 @@
                     <table class="table table-bordered">
                         <tr>
                             <td>Order Date</td>
-                            <td>{{ date_format($data->created_at, 'ds F, Y-h:i:s A') }}</td>
+                            <td>{{ date_format($data->created_at, 'dS F, Y-h:i:s A') }}</td>
                         </tr>
                         <tr>
-                            <td>Order Status</td>
-                            <td>{{ $data->order_status }}</td>
+                            <td>Sub Total</td>
+                            <td>{{ $data->grand_total + $data->coupon_amount - $data->shipping_charge }}</td>
                         </tr>
                         <tr>
-                            <td>Order Total</td>
-                            <td>{{ $data->grand_total + $data->coupon_amount }}</td>
+                            <td>Coupon Amount</td>
+                            <td> ({{ number_format($data->coupon_amount,2) }}) </td>
                         </tr>
                         <tr>
-                            <td>Order Shipping Charge</td>
-                            <td>{{ $data->shipping_charge }} BDT</td>
+                            <td>Shipping Charge</td>
+                            <td>{{ number_format($data->shipping_charge,2) }} </td>
+                        </tr>
+                        <tr>
+                            <td>Grand Total</td>
+                            <td>{{ $data->grand_total }}</td>
                         </tr>
                         <tr>
                             <td>Coupon Code</td>
                             <td>{{ $data->coupon_code }} </td>
-                        </tr>
-                        <tr>
-                            <td>Coupon Amount</td>
-                            <td>{{ $data->coupon_amount }} </td>
                         </tr>
                         <tr>
                             <td>Payment Method</td>

@@ -48,7 +48,7 @@ class OrderController extends Controller
         // Create Order Table
         $coupon_code = Session::get('coupon_code') ? Session::get('coupon_code') : 0;
         $coupon_amount = Session::get('coupon_amount') ? Session::get('coupon_amount') : 0;
-        $grandTotal = Session::get('grandTotal') ? Session::get('grandTotal') : 0;
+        $grandTotal = (Session::get('grandTotal') != null ? Session::get('grandTotal') : 0) + (Session::get('shipping_charge') != null ? Session::get('shipping_charge') : 0);
 
         if ($payment_method == "COD") {
             $payment_gateway = "COD";
@@ -60,7 +60,7 @@ class OrderController extends Controller
         $order = new Order();
         $order->name = Auth::user()->name;
         $order->user_id = Auth::id();
-        $order->shipping_charge = 0;
+        $order->shipping_charge = (Session::get('shipping_charge') != null ? Session::get('shipping_charge') : 0);
         $order->shipping_address = $shipping_address_id;
         $order->coupon_code = $coupon_code;
         $order->coupon_amount = $coupon_amount;
@@ -70,6 +70,12 @@ class OrderController extends Controller
         $order->grand_total = $grandTotal;
 
         if ($order->save()) {
+
+            $orderStatusLog = new OrderStatusLog();
+            $orderStatusLog->orders_id = $order->id;
+            $orderStatusLog->status = 'New Order';
+            $orderStatusLog->save();
+
             foreach ($cartItems as $item) {
                 $orderItem = new OrderItem();
                 $orderItem->order_id = $order->id;
@@ -90,15 +96,13 @@ class OrderController extends Controller
                     Cart::destroy($item->id);
                     $attribute->stock = $attribute->stock - $item->quantity;
                     $attribute->save();
-                    $orderStatusLog = new OrderStatusLog();
-                    $orderStatusLog->orders_id = $order->id;
-                    $orderStatusLog->status = "New Order";
                 }
             }
             Session::forget('coupon_code');
             Session::forget('coupon_amount');
             Session::forget('grandTotal');
             Session::forget('numberOfCartItem');
+            Session::forget('shipping_charge');
 
             $email = Auth::user()->email;
             Mail::send('email.neworder', ['order' => $order], function ($message) use($email){
@@ -106,7 +110,7 @@ class OrderController extends Controller
             });
 
 
-            return redirect()->back()->with('success_msg', 'Your order id is # ' . $order->id . '. Please stay with us, Thank you !');
+            return redirect()->back()->with('success_msg', 'Your order id is # ' . $order->id . '. Please Check you email !');
         }
         return redirect()->back()->with('error_msg', 'Something error, Please try again !');
     }
@@ -116,7 +120,7 @@ class OrderController extends Controller
     {
         Session::put('pageTitle', 'Product');
         Session::put('activer', 'Order List');
-        $orders = Order::with('users')->get();
+        $orders = Order::orderBy('id','desc')->with('users')->get();
         return view('admin.product.order.index', ['data' => $orders]);
     }
     public function adminorderdetails($id)
@@ -144,18 +148,20 @@ class OrderController extends Controller
             $request->validate([
                 'courier_name' => 'required',
                 'tracking_number' => 'required',
-                'shipping_charge' => 'required'
             ], [
                 'courier_name' => 'Courier Name is required!',
                 'tracking_number' => 'Tracking Numbe is required!',
-                'shipping_charge' => 'Shipping Charge is required!'
             ]);
         }
         $order = Order::findOrFail($id);
         $order->order_status = $request->order_status;
         $order->courier_name = $request->courier_name;
         $order->tracking_number = $request->tracking_number;
-        $order->shipping_charge = $request->shipping_charge;
+        if($request->shipping_charge != null){
+            $order->grand_total = ($order->grand_total - $order->shipping_charge) + $request->shipping_charge;
+            $order->shipping_charge = $request->shipping_charge;
+        }
+
         if ($order->save()) {
 
             // validated already this update done or not
@@ -459,16 +465,20 @@ class OrderController extends Controller
                                 </tr>";
         }
         $html .= "<tr>
-                                <td colspan='5' style='text-align: right; padding: 10px; font-weight: bold;' >Total</td>
+                                <td colspan='5' style='text-align: right; padding: 10px; font-weight: bold;' >Sub Total</td>
                                 <td style='font-weight: bold; text-'>BDT
-                                    " . number_format($orders->grand_total + $orders->coupon_amount, 2) . "</td>
+                                    " . number_format(($orders->grand_total + $orders->coupon_amount) - $orders->shipping_charge, 2) . "</td>
                             </tr>
                             <tr>
                                 <td colspan='5' style='text-align: right; padding: 10px; font-weight: bold;' >Coupon Discount</td>
-                                <td style='font-weight: bold; text-'>BDT" . number_format($orders->coupon_amount, 2) . "</td>
+                                <td style='font-weight: bold; text-'>BDT (" . number_format($orders->coupon_amount, 2) . ")</td>
                             </tr>
                             <tr>
-                                <td colspan='5' style='text-align: right; padding: 10px; font-weight: bold;' >Coupon Discount</td>
+                                <td colspan='5' style='text-align: right; padding: 10px; font-weight: bold;' >Shipping Charge</td>
+                                <td style='font-weight: bold; text-'>BDT " . number_format($orders->shipping_charge, 2) . "</td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' style='text-align: right; padding: 10px; font-weight: bold;' >Grand Total</td>
                                 <td style='font-weight: bold; '>BDT " . number_format($orders->grand_total, 2) . "</td>
                             </tr>
                         </table>

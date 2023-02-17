@@ -254,16 +254,20 @@ use App\Models\Cart;
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan='5' style='text-align: right; font-weight: bold;' >Total</td>
+                        <td colspan='5' style='text-align: right; font-weight: bold;' >Sub Total</td>
                         <td style='font-weight: bold; text-'>BDT
-                            {{ number_format($data->grand_total + $data->coupon_amount, 2) }}</td>
+                            {{ number_format(($data->grand_total + $data->coupon_amount)- $data->shipping_charge, 2) }}</td>
                     </tr>
                     <tr>
                         <td colspan='5' style='text-align: right; font-weight: bold;' >Coupon Discount</td>
-                        <td style='font-weight: bold; text-'>BDT {{ number_format($data->coupon_amount, 2) }}</td>
+                        <td style='font-weight: bold; text-'>BDT ({{ number_format($data->coupon_amount, 2) }})</td>
                     </tr>
                     <tr>
-                        <td colspan='5' style='text-align: right; font-weight: bold;' >Coupon Discount</td>
+                        <td colspan='5' style='text-align: right; font-weight: bold;' >Shipping Charge</td>
+                        <td style='font-weight: bold; text-'>BDT {{ number_format($data->shipping_charge, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan='5' style='text-align: right; font-weight: bold;' >Grand Total</td>
                         <td style='font-weight: bold; '>BDT {{ number_format($data->grand_total, 2) }}</td>
                     </tr>
                 </table>

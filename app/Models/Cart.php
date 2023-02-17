@@ -50,6 +50,23 @@ class Cart extends Model
         $cartItems = Cart::where(['session_id'=> $session_id, 'users_id' => $user_id])->with('product')->get();
         return $cartItems;
     }
+    public static function getCartWeight(){
+
+        if(Session::has('session_id')){
+            $session_id = Session::get('session_id');
+        }else{
+            $session_id = Session::put('session_id', Session::getId());
+        }
+
+        if(Auth::check()){
+            $user_id = Auth::id();
+            $session_id = 0;
+        }else{
+            $user_id = 0;
+        }
+        $cartIWeight = Cart::where(['session_id'=> $session_id, 'users_id' => $user_id])->with('product')->sum('quantity');
+        return $cartIWeight;
+    }
 
     public static function getCartProducts($product_id, $attribute_id){
         $cartProduct = [];
