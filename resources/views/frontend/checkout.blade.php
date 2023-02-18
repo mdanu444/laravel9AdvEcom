@@ -152,14 +152,37 @@
                 <table>
                     <tr>
                         <td>
-                            <label style="font-weight: bolder">
-                                <input style="margin-top: -2px;" name="payment_method" type="radio" value="COD"> COD
-                            </label>
+                            <fieldset style="border:2px solid lightgray; padding: 10px;">
+                                <legend style="text-align: center;font-size: 14px; line-height: 1; background: lightgray; padding: 3px; border-radius: 3px; font-weight: bolder; text-align: center;">Off Line Payment</legend>
+                                <label style="font-weight: bolder">
+                                    <img style="width: 50px; height: 50px; cursor: pointer; margin-left: 15px;" src="{{ asset('images/payment_image/cod.png') }}" alt="PayPal Payment"> <br>
+                                    <input style="margin-top: -2px;" name="payment_method" type="radio" value="COD"> Cash on delivery
+                                </label>
+                            </fieldset>
                         </td>
                         <td>
-                            <label style="font-weight: bolder">
-                                <input style="margin-top: -2px;" name="payment_method" type="radio" value="Prepaid"> Prepaid
-                            </label>
+                            <fieldset style="border:2px solid lightgray; padding: 10px;">
+                                <legend style="text-align: center;font-size: 14px; line-height: 1; background: lightgray; padding: 3px; border-radius: 3px; font-weight: bolder;">Online Payment/Prepaid</legend>
+                                <div class="prepaid" style="display: flex">
+                                    <label style="font-weight: bolder">
+                                        <img style="width: 50px; height: 50px; cursor: pointer; margin-left: 15px;" src="{{ asset('images/payment_image/paypal.png') }}" alt="PayPal Payment"> <br>
+                                        <input style="margin-top: -2px;" name="payment_method" type="radio" value="Prepaid"> Paypal
+                                    </label>
+                                    <label style="font-weight: bolder">
+                                        <img style="width: 50px; height: 50px; cursor: pointer; margin-left: 15px;" src="{{ asset('images/payment_image/bkash.png') }}" alt="bKash  Payment"> <br>
+                                        <input style="margin-top: -2px;" name="payment_method" type="radio" value="bkash"> bKash
+                                    </label>
+                                    <label style="font-weight: bolder">
+                                        <img style="width: 50px; height: 50px; cursor: pointer; margin-left: 15px;" src="{{ asset('images/payment_image/nagad.svg') }}" alt="Nagad Payment"> <br>
+                                        <input style="margin-top: -2px;" name="payment_method" type="radio" value="Nagad"> Nagad
+                                    </label>
+                                    <label style="font-weight: bolder">
+                                        <img style="width: 50px; height: 50px; cursor: pointer; margin-left: 15px;" src="{{ asset('images/payment_image/sslcommerze.png') }}" alt="SSL Commerz Payment"> <br>
+                                        <input style="margin-top: -2px;" name="payment_method" type="radio" value="SSLCommerz"> SSL Commerz
+                                    </label>
+                                </div>
+                            </fieldset>
+
                         </td>
                     </tr>
                     </table>

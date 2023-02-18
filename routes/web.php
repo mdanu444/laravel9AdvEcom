@@ -10,16 +10,22 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductSectionController;
 use App\Http\Controllers\Admin\ProductSubCategoryController;
+use App\Http\Controllers\BkashController;
 use App\Http\Controllers\Frontend\Index;
 use App\Http\Controllers\Frontend\ProductDetails;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\InsertDataController;
+use App\Http\Controllers\NagadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\RocketController;
 use App\Http\Controllers\ShippingChargeController;
+use App\Http\Controllers\SSLCommerzController;
+use App\Http\Controllers\SslCommerzPaymentController;
 use App\Models\Admin\Banner;
 use App\Models\Admin\Coupon;
 use App\Models\Admin\OrderStatus;
@@ -32,7 +38,6 @@ use App\Models\Division;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +52,23 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// SSLCommerz
+
+//Route::get('/payment/{SSLCommerz}/SSLCommerz', [SSLCommerzController::class, 'index']);
+
+// SSLCOMMERZ Start
+//Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/example2/{SSLCommerz}', [SslCommerzPaymentController::class, 'exampleHostedCheckout'])->name('frontend.SSLCommerz.index');
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+//SSLCOMMERZ END
 
 
 // // for frontend start from here
@@ -93,6 +115,21 @@ Route::middleware(['cartCleaner', 'PreventBackHistory'])->name('frontend.')->gro
         Route::put('/updatepassword', [UserController::class, 'updatepassword'])->name('user.updatepassword');
         Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
         Route::post('/Updatecheckout', [CartController::class, 'UpdateCheckout'])->name('UpdateCheckout');
+
+        // paypal
+        Route::get('/payment/{paypal}/paypal', [PaypalController::class, 'index'])->name('paypal.index');
+        Route::get('/payment/{paypal}/success', [PaypalController::class, 'success'])->name('paypal.success');
+        Route::get('/payment/{paypal}/cancel', [PaypalController::class, 'cancel'])->name('paypal.cancel');
+
+        // bkash
+        Route::get('/payment/{bkash}/bkash', [BkashController::class, 'index'])->name('bkash.index');
+        Route::get('/payment/{bkash}/success', [BkashController::class, 'success'])->name('bkash.success');
+        Route::get('/payment/{bkash}/cancel', [BkashController::class, 'cancel'])->name('bkash.cancel');
+
+        // Nagad
+        Route::get('/payment/{nagad}/nagad', [NagadController::class, 'index'])->name('nagad.index');
+        Route::get('/payment/{nagad}/success', [NagadController::class, 'success'])->name('nagad.success');
+        Route::get('/payment/{nagad}/cancel', [NagadController::class, 'cancel'])->name('nagad.cancel');
     });
 
 });

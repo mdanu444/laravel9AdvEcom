@@ -16,5 +16,11 @@ class VerifyCsrfToken extends Middleware
         '/admin/getcategorybysection',
         'admin/getsubcategorybysection',
         '/emailunickness ',
+        'sslcommerz/*',
+        '/success',
+        '/cancel',
+        '/fail',
+        '/ipn',
+        '/pay-via-ajax',
     ];
 }

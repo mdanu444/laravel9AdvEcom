@@ -7,6 +7,8 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-dompdf": "^2.0",
+        "codeboxr/nagad": "^2.0",
+        "dgvai/laravel-sslcommerz": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.7",
         "laravel/framework": "^9.19",

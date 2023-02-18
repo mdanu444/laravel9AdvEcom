@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Milon\Barcode\Facades\DNS2DFacade;
+use Codeboxr\Nagad\Facade\NagadPayment;
 
 class OrderController extends Controller
 {
@@ -54,7 +55,19 @@ class OrderController extends Controller
             $payment_gateway = "COD";
         }
         if ($payment_method == "Prepaid") {
-            $payment_gateway = "paypal";
+            $payment_gateway = "Paypal";
+        }
+        if ($payment_method == "bkash") {
+            $payment_gateway = "bkash";
+        }
+        if ($payment_method == "Rocket") {
+            $payment_gateway = "Rocket";
+        }
+        if ($payment_method == "Nagad") {
+            $payment_gateway = "Nagad";
+        }
+        if ($payment_method == "SSLCommerz") {
+            $payment_gateway = "SSLCommerz";
         }
 
         $order = new Order();
@@ -65,12 +78,26 @@ class OrderController extends Controller
         $order->coupon_code = $coupon_code;
         $order->coupon_amount = $coupon_amount;
         $order->order_status = 'New Order';
+        if ($payment_gateway == "Paypal") {
+            $order->order_status = 'Un-Paid';
+        }
+        if ($payment_gateway == "bkash") {
+            $order->order_status = 'Un-Paid';
+        }
+        if ($payment_gateway == "Rocket") {
+            $order->order_status = 'Un-Paid';
+        }
+        if ($payment_gateway == "Nagad") {
+            $order->order_status = 'Un-Paid';
+        }
+        if ($payment_gateway == "SSLCommerz") {
+            $order->order_status = 'Un-Paid';
+        }
         $order->payment_method = $payment_method;
         $order->payment_gateway = $payment_gateway;
         $order->grand_total = $grandTotal;
 
         if ($order->save()) {
-
             $orderStatusLog = new OrderStatusLog();
             $orderStatusLog->orders_id = $order->id;
             $orderStatusLog->status = 'New Order';
@@ -98,6 +125,9 @@ class OrderController extends Controller
                     $attribute->save();
                 }
             }
+
+
+
             Session::forget('coupon_code');
             Session::forget('coupon_amount');
             Session::forget('grandTotal');
@@ -105,11 +135,30 @@ class OrderController extends Controller
             Session::forget('shipping_charge');
 
             $email = Auth::user()->email;
-            Mail::send('email.neworder', ['order' => $order], function ($message) use($email){
-                $message->to($email)->subject('Order Confirmation');
-            });
+            // Mail::send('email.neworder', ['order' => $order], function ($message) use($email){
+            //     $message->to($email)->subject('Order Confirmation');
+            // });
 
-
+            if ($payment_gateway == "Paypal") {
+                Session::put('order', $order);
+                return view('frontend.paypal.index');
+            }
+            if ($payment_gateway == "bkash") {
+                Session::put('order', $order);
+                return view('frontend.bkash.index');
+            }
+            if ($payment_gateway == "Rocket") {
+                Session::put('order', $order);
+                return view('frontend.rocket.index');
+            }
+            if ($payment_gateway == "Nagad") {
+                Session::put('order', $order);
+                return NagadPayment::create($order->grand_total, $order->id);
+            }
+            if ($payment_gateway == "SSLCommerz") {
+                Session::put('order', $order);
+                return redirect()->route('frontend.SSLCommerz.index',['SSLCommerz' => Crypt::encryptString($order->id)]);
+            }
             return redirect()->back()->with('success_msg', 'Your order id is # ' . $order->id . '. Please Check you email !');
         }
         return redirect()->back()->with('error_msg', 'Something error, Please try again !');

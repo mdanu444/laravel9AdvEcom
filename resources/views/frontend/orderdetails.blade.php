@@ -48,6 +48,13 @@
                 font-weight: bold;
                 font-size: 1.2rem;
             }
+            .paymentBtn{
+                padding:3px 8px; border-radius: 5px; background:rgb(253, 194, 0); border: 1px solid lightgray; text-decoration: none; font-weight: bold;
+            }
+            .paymentBtn:hover{
+                text-decoration: none;
+                outline: 1px solid red;
+            }
         </style>
         {{--  showing orders  --}}
         <div class="container"  style="width: 100% !important; display: flex; box-sizing: border-box;">
@@ -94,7 +101,25 @@
                             </tr>
                             <tr>
                                 <td>Payment Method</td>
-                                <td>{{ $order->payment_method }}</td>
+                                <td>{{ $order->payment_method }} &nbsp;&nbsp;&nbsp;
+                                    @if($order->order_status == "Un-Paid")
+                                    <a class="paymentBtn"
+                                        @if ($order->payment_method == 'Paypal')
+                                        href="{{ route('frontend.paypal.index',['paypal' => Crypt::encryptString($order->id)]) }}"
+                                        @endif
+                                        @if ($order->payment_method == 'bkash')
+                                        href="{{ route('frontend.bkash.index',['bkash' => Crypt::encryptString($order->id)]) }}"
+                                        @endif
+                                        @if ($order->payment_method == 'Nagad')
+                                        href="{{ route('frontend.nagad.index',['nagad' => Crypt::encryptString($order->id)]) }}"
+                                        @endif
+                                        @if ($order->payment_method == 'SSLCommerz')
+                                        href="{{ route('frontend.SSLCommerz.index',['SSLCommerz' => Crypt::encryptString($order->id)]) }}"
+                                        @endif
+
+                                    >Make Payment</a>
+                                    @endif
+                                </td>
                             </tr>
                         </table>
                     </div>
