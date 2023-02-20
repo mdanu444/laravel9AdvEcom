@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Library\SslCommerz\SslCommerzNotification;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class SslCommerzPaymentController extends Controller
@@ -81,9 +83,6 @@ class SslCommerzPaymentController extends Controller
                 'currency' => $post_data['currency']
             ]);
 
-            $Working_order = Order::find(Session::get('order')->id);
-            $Working_order->order_status = "Paid";
-            $Working_order->save();
 
         $sslc = new SslCommerzNotification();
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
@@ -192,16 +191,52 @@ class SslCommerzPaymentController extends Controller
                 $update_product = DB::table('sslecorders')
                     ->where('transaction_id', $tran_id)
                     ->update(['status' => 'Processing']);
-                    echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px;'>Payment Successfull ! <br> Please go back or <a href='".route('frontend.index')."'>click here</a>";
-                echo ("<script>setInterval(()=>{window.location = '".route('frontend.index')."'}, 4000) </script><br>Window will be redirect automatically, Please Wait...</div>");
+
+
+                    $transection = DB::table('sslecorders')->where('transaction_id', $order_details->transaction_id)->first();
+                    $user = User::where('email', $transection->email)->first();
+                    Auth::login($user);
+
+
+                    $Working_order = Order::where('user_id', $user->id)->latest()->first();
+                    $Working_order->order_status = "Paid";
+                    $Working_order->save();
+
+                    $status = 'Paid';
+                    $method = 'SSL Ecommerz';
+
+
+
+                    Mail::send('email.payment', ['payment' => $transection, 'status' => $status, 'method' => $method], function ($message) use($user){
+                        $message->to($user->email)->subject('Payment Confirmation');
+                    });
+
+
+
+                    echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px;'>Payment Successfull ! <br> Payment confirmation sent to you email. <br> <a href='".route('frontend.orderdetails',['id' => Crypt::encryptString($Working_order->id)])."'>click here</a> to go back.";
+
             }
         } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
+            $transection = DB::table('sslecorders')->where('transaction_id', $order_details->transaction_id)->first();
+            $user = User::where('email', $transection->email)->first();
+            Auth::login($user);
 
-            echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px;'>Payment Successfull ! <br> Please go back or <a href='".route('frontend.index')."'>click here</a>";
-            echo ("<script>setInterval(()=>{window.location = '".route('frontend.index')."'}, 4000) </script><br>Window will be redirect automatically, Please Wait...</div>");
+            $Working_order = Order::where('user_id', $user->id)->latest()->first();
+            $Working_order->order_status = "Paid";
+            $Working_order->save();
+
+
+            $status = 'Paid';
+            $method = 'SSL Ecommerz';
+
+
+            Mail::send('email.payment', ['payment' => $transection, 'status' => $status, 'method' => $method], function ($message) use($user){
+            $message->to($user->email)->subject('Payment Confirmation');
+        });
+        echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px;'>Payment Successfull ! <br> Payment confirmation sent to you email. <br> <a href='".route('frontend.orderdetails',['id' => Crypt::encryptString($Working_order->id)])."'>click here</a> to go back.";
         } else {
             #That means something wrong happened. You can redirect customer to your product page.
-            return redirect()->route('frontend.index')->with('success_msg', 'Payment Successfull');
+            return redirect()->route('frontend.cart.index')->with('success_msg', 'Payment Successfull');
         }
 
 
@@ -219,7 +254,8 @@ class SslCommerzPaymentController extends Controller
             $update_product = DB::table('sslecorders')
                 ->where('transaction_id', $tran_id)
                 ->update(['status' => 'Failed']);
-            echo "Transaction is Falied";
+            echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px; color: red;'>Payment Failed ! <br> Please go back or <a href='".route('frontend.index')."'>click here</a>";
+            echo ("<script>setInterval(()=>{window.location = '".route('frontend.index')."'}, 4000) </script><br>Window will be redirect automatically, Please Wait...</div>");
         } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
             echo "Transaction is already Successful";
         } else {
@@ -240,7 +276,8 @@ class SslCommerzPaymentController extends Controller
             $update_product = DB::table('sslecorders')
                 ->where('transaction_id', $tran_id)
                 ->update(['status' => 'Canceled']);
-            echo "Transaction is Cancel";
+                echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px; color: red;'>Payment Canceled ! <br> Please go back or <a href='".route('frontend.index')."'>click here</a>";
+                echo ("<script>setInterval(()=>{window.location = '".route('frontend.index')."'}, 4000) </script><br>Window will be redirect automatically, Please Wait...</div>");
         } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
             echo "Transaction is already Successful";
         } else {
@@ -275,7 +312,8 @@ class SslCommerzPaymentController extends Controller
                         ->where('transaction_id', $tran_id)
                         ->update(['status' => 'Processing']);
 
-                    echo "Transaction is successfully Completed";
+                        echo "<div style='margin: auto; width: 60%; padding: 10px; border-radius: 8px; margin-top: 50px; text-align: center; forn-family: arial; font-size: 20px; color: red;'>Payment Failed ! <br> Please go back or <a href='".route('frontend.index')."'>click here</a>";
+                        echo ("<script>setInterval(()=>{window.location = '".route('frontend.index')."'}, 4000) </script><br>Window will be redirect automatically, Please Wait...</div>");
                 }
             } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
 

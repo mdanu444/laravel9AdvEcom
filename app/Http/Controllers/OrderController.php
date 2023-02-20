@@ -135,9 +135,9 @@ class OrderController extends Controller
             Session::forget('shipping_charge');
 
             $email = Auth::user()->email;
-            // Mail::send('email.neworder', ['order' => $order], function ($message) use($email){
-            //     $message->to($email)->subject('Order Confirmation');
-            // });
+            Mail::send('email.neworder', ['order' => $order], function ($message) use($email){
+                $message->to($email)->subject('Order Confirmation');
+            });
 
             if ($payment_gateway == "Paypal") {
                 Session::put('order', $order);

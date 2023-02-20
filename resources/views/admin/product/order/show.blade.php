@@ -109,6 +109,14 @@
                                 <input class="form-control" type="number" placeholder="Charge" name="shipping_charge"
                                     id="shipping_charge">
                             </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Payment Getway" value="SSLCommerz" name="payment_gateway"
+                                    id="payment_gateway">
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control" type="text" placeholder="Transection Id"  name="payment_gateway"
+                                    id="transaction_id">
+                            </div>
 
                         </div>
 
@@ -183,14 +191,33 @@
         $("#order_status").on('change', shippedchecker);
 
         function shippedchecker() {
-            if ($("#order_status").val() != "Shipped") {
-                $("#courier").hide();
-                $("#tracking").hide();
-                $("#shipping_charge").hide();
-            } else {
+            if ($("#order_status").val() == "Shipped") {
                 $("#courier").show();
                 $("#tracking").show();
                 $("#shipping_charge").show();
+                $("#payment_gateway").hide();
+                $("#transaction_id").hide();
+            }
+            else if ($("#order_status").val() == "Un-Paid") {
+                $("#courier").hide();
+                $("#tracking").hide();
+                $("#shipping_charge").hide();
+                $("#transaction_id").hide();
+                $("#payment_gateway").show();
+            }
+            else if ($("#order_status").val() == "Paid") {
+                $("#courier").hide();
+                $("#tracking").hide();
+                $("#shipping_charge").hide();
+                $("#payment_gateway").show();
+                $("#transaction_id").show();
+            }
+            else {
+                $("#courier").hide();
+                $("#tracking").hide();
+                $("#shipping_charge").hide();
+                $("#payment_gateway").hide();
+                $("#transaction_id").hide();
             }
         }
         shippedchecker();
